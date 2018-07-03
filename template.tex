@@ -16,7 +16,8 @@
 \theoremstyle{definition}
 \newtheorem*{remark}{Remark}
 
-\title{Your title}
+% Can I make a more precise title than this?
+\title{Distributed time synchronization in musical applications}
 \author{Xavier Riley}
 
 \newcommand{\Programme}{Distributed and Networked Systems}
@@ -25,6 +26,33 @@
 \maketitle
 
 \declaration
+
+% Motivations
+% Artistic output but also, music industry is large and $$$
+% requirements of a musical performance
+% - ensemble
+% - timekeeping (layers - a year is one orbit of the sun, a day one rotation on the earths' axis)
+% - colocated as opposed to geo-distributed
+% clock synchronization literature
+% - internal, external, pulse based - how have these been applied to music so far?
+% Ableton Live
+% - aims, tradeoffs, assumptions (reliable network)
+% - works via multicast, discovery, exchanging timelines
+% - fault tolerance concepts (sending on all changes)
+% Can it be improved upon without violating simplicity? To provide:
+% - resilience to lost messages (reliable broadcast) - does it already do this?
+% - resistance to crash faults (simple consensus) - protocol assumes a shared network - not sure this makes sense
+% - improvements in synchronization bounds - what are the current limits? - are they perceptible? (within 10ms)
+% - other things I haven't considered yet
+
+% how to test it? One option - get several devices and record into same soundcard
+% has the benefit of being a realistic test, easier to get setup
+% other option - use soundflower and write to a multichannel wav - maybe more reproducible
+
+% further ideas - even better internal sync (at the cost of bandwidth) - Google paper
+% resettable oscillators - more naturally maps onto how humans synchronize perhaps
+% options for geo-distributed time synchronization
+% extensions beyond music to other time sensitive domains
 
 \begin{abstract}
   Your abstract goes here.
