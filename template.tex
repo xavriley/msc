@@ -28,13 +28,20 @@
 \declaration
 
 % Motivations
+%
 % Artistic output but also, music industry is large and $$$
 % requirements of a musical performance
 % - ensemble
 % - timekeeping (layers - a year is one orbit of the sun, a day one rotation on the earths' axis)
 % - colocated as opposed to geo-distributed
 % clock synchronization literature
-% - internal, external, pulse based - how have these been applied to music so far?
+% - internal, external, pulse based - how have these been applied to music so far? Which work well?
+% distributed systems and music
+% - music (and clock sync) is not linear data! Consistency is not the primary issue. If a peer drifts or goes out of time,
+%   it doesn't create merge problems. It can simply restart and all is well. Largely stateless
+% - the challenge is mainly keeping tight synchronization bounds for as much time as possible
+% - also practical challenges around the experience for those using the software
+% - there are *some* consistency issues though. For example, synchronizing on current tempo and other transport messages
 % Ableton Live
 % - aims, tradeoffs, assumptions (reliable network)
 % - works via multicast, discovery, exchanging timelines
@@ -45,14 +52,47 @@
 % - improvements in synchronization bounds - what are the current limits? - are they perceptible? (within 10ms)
 % - other things I haven't considered yet
 
+% Possible experiment criteria
+% We can't measure things like dropped writes or stale reads so what are the
+% criteria for a music system? Draw comparisons with gossip analysis -
+% convergence time, stability, resilience to pertubations. Also check how clock
+% sync literature handles this.
+% The main thing is that the tempo stays in sync for as much time as possible
+
 % how to test it? One option - get several devices and record into same soundcard
 % has the benefit of being a realistic test, easier to get setup
 % other option - use soundflower and write to a multichannel wav - maybe more reproducible
+% more scientific - setup jepsen and log timestamps
 
 % further ideas - even better internal sync (at the cost of bandwidth) - Google paper
 % resettable oscillators - more naturally maps onto how humans synchronize perhaps
 % options for geo-distributed time synchronization
 % extensions beyond music to other time sensitive domains
+
+% What your project *must* contain
+% motivations and original aims including how this work may help in future career
+% assessment inc. self evaluation. How did it go? What did you do right or
+%      wrong? What have you learnt about planning and execution? Where next?
+
+% should contain
+% - abstract
+% - introduction
+% - background research (literature survey/review)
+% - either
+
+% sofware product - software engineering method, requirements analysis, design,
+% implementation, testing - also user or installation manual
+
+% theoretical - development of theory, inc small programs, explanation of
+% algorithms, descriptions of hard theory, results, analysis
+
+% experimental - experimental results, analysis, conclusions
+
+% - professional issues (as appendix - c. 1000 words)
+% - self assessment
+% - bibliography
+% - any code, including instructions on how to run
+% - other - layout diagrams, sample output, program listing
 
 \begin{abstract}
   Your abstract goes here.
