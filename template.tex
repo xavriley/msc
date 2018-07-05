@@ -37,11 +37,22 @@
 % clock synchronization literature
 % - internal, external, pulse based - how have these been applied to music so far? Which work well?
 % distributed systems and music
+% - what distinguishes music from the rest of the clock synchronization
+%   literature?
 % - music (and clock sync) is not linear data! Consistency is not the primary issue. If a peer drifts or goes out of time,
 %   it doesn't create merge problems. It can simply restart and all is well. Largely stateless
 % - the challenge is mainly keeping tight synchronization bounds for as much time as possible
 % - also practical challenges around the experience for those using the software
 % - there are *some* consistency issues though. For example, synchronizing on current tempo and other transport messages
+
+% assessment criteria
+% - bounds on synchronization
+% - message complexity /bandwidth
+% - difficulty of setup/integration
+% - failure modes
+% - resilience to drift
+% - topology / spof?
+
 % Ableton Live
 % - aims, tradeoffs, assumptions (reliable network)
 % - works via multicast, discovery, exchanging timelines
