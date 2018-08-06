@@ -195,9 +195,54 @@ Goltz\cite{goltz2018ableton} for a review of these.
 
 % experimental - experimental results, analysis, conclusions
 \section{Criteria and design}
+
+\subsection{Consistency in a musical context}
+
+Convergence time as a percentage of the session
+
+Longest time for period of divergence.
+
+\subsection{Accuracy versus Bandwidth}
+\subsection{Use of Jepsen, Docker and log parsing}
+
+Jepsen desgined to test linearizability through fault injection, however it is flexible.
+
+Docker allows straightforward reproducbility on development machines or in CI testing.
+
+Use of debug logs in Link
+
+\subsection{Topologies and latencies}
+
+Easy (connected, zero delay)
+Medium (Ring? bridge? zero delay)
+Hard (Line, zero delay)
+
+ditto small delay
+
+ditto large, variable or uneven delay
+
 \section{Experimental results}
+
+Results here, maybe detailed graphs in appendix
+
 \section{Analysis}
+
+Resilient to different network conditions. Usually converges.
+
+\subsection{Identifying and triggering invalid states}
+
 \section{Further work}
+
+Generalize the work to other solutions.
+
+Create CI testing for the Link library.
+
+Suggest improvements to Link - Google nanosecond precision paper. Potential
+uncertainty window around synchronization events. Configuration/visibility of
+session information.
+
+Integration into Sonic Pi. Windows compatibility.
+
 \section{Conclusions}
 
 \bibliographystyle{plain}
@@ -211,6 +256,7 @@ Goltz\cite{goltz2018ableton} for a review of these.
 \section{Professional issues}
 \section{Acknowledgements}
 
+Open source code
 Colleagues at Heroku
 Salesforce for funding
 Gregory and staff at RHUL
