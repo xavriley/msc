@@ -1,5 +1,5 @@
-\contentsline {section}{\numberline {1}Section one}{1}
-\contentsline {section}{\numberline {2}Section two}{1}
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {2}Background research}{1}
 \contentsline {section}{\numberline {3}Section three}{1}
 \contentsline {section}{\numberline {4}Section four}{1}
 \contentsline {section}{\numberline {5}Section five}{1}

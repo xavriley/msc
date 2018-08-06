@@ -1,9 +1,14 @@
 \begin{thebibliography}{1}
 
-\bibitem{hastie/etal:2009}
-Trevor Hastie, Robert Tibshirani, and Jerome Friedman.
-\newblock {\em The Elements of Statistical Learning: Data Mining, Inference,
-  and Prediction}.
-\newblock Springer, New York, second edition, 2009.
+\bibitem{goltz2018ableton}
+Florian Goltz.
+\newblock Ableton link--a technology to synchronize music software.
+\newblock In {\em Linux Audio Conference 2018}, page~39, 2018.
+
+\bibitem{jepsen}
+{Kingsbury, Kyle}.
+\newblock Jepsen - a framework for distributed systems verification, with fault
+  injection, 2018.
+\newblock [Online; accessed 6-August-2018].
 
 \end{thebibliography}

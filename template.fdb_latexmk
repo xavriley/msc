@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex template"] 1530650502 "template.aux" "template.bbl" "template" 1530824006
+["bibtex template"] 1533585159 "template.aux" "template.bbl" "template" 1533585167
   "/usr/local/texlive/2018basic/texmf-dist/bibtex/bst/base/plain.bst" 1480098433 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "bibliography.bib" 1363979314 286 146214d0c6a098e35af8844a58d83c4c ""
-  "template.aux" 1530824006 680 553789d411d4810b04f3fc0d69b11b8d ""
+  "bibliography.bib" 1533584721 466 1c1d42d7e487dac1d165f384acc14318 ""
+  "template.aux" 1533585159 727 207369b922092b8e026c30a7c9301fe0 ""
   (generated)
   "template.bbl"
   "template.blg"
-["pdflatex"] 1530824006 "template.tex" "template.pdf" "template" 1530824006
+["pdflatex"] 1533585159 "template.tex" "template.pdf" "template" 1533585167
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1480098698 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -75,12 +75,12 @@
   "/usr/local/texlive/2018basic/texmf.cnf" 1523933242 628 fc6344cfe40d0ae2a8eba43e51328a06 ""
   "BigDataStyle.txt" 1403681130 2730 7d511d5edf50d446fc78f4ffe3bbcf0d ""
   "RHULlogo.jpg" 1386315860 29718 d184daeb9db64af12327e604245210a8 ""
-  "template.aux" 1530824006 680 553789d411d4810b04f3fc0d69b11b8d ""
-  "template.bbl" 1530650502 281 ed87ca956fb7a54a21a5ca7a61a8070a "bibtex template"
-  "template.tex" 1530824004 4940 b4ce6eef31a1ee2059fedfb8fb51903d ""
-  "template.toc" 1530824006 430 d94259b0b1837074cc1de2ba4b7da245 ""
+  "template.aux" 1533585159 727 207369b922092b8e026c30a7c9301fe0 ""
+  "template.bbl" 1533585159 404 e9eaaa55ca1284135ae6675cac65e6f5 "bibtex template"
+  "template.tex" 1533585157 5676 ea4d6ce3efe54b4c116eb56d84dbcae4 ""
+  "template.toc" 1533585159 439 8ab1ee0dd87837cacff5d60e7c5d1cf2 ""
   (generated)
   "template.log"
-  "template.aux"
   "template.pdf"
   "template.toc"
+  "template.aux"

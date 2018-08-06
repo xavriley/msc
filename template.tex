@@ -16,8 +16,7 @@
 \theoremstyle{definition}
 \newtheorem*{remark}{Remark}
 
-% Can I make a more precise title than this?
-\title{Distributed time synchronization in musical applications}
+\title{Breaking Links: Evaluating distributed time synchronization for musical applications using Ableton Link}
 \author{Xavier Riley}
 
 \newcommand{\Programme}{Distributed and Networked Systems}
@@ -106,17 +105,26 @@
 % - other - layout diagrams, sample output, program listing
 
 \begin{abstract}
-  Your abstract goes here.
+  With the recent explosion of connected musical devices, the challenge of
+  making these play "in time" with each other mounts against application
+  developers and device manufacturers. Ableton Link\cite{goltz2018ableton} aims to provide robust,
+  resilient musical synchronization using principles from distributed systems
+  programming, in contrast to previous master/slave approaches. However the
+  evaluation criteria for such a system are not well represented in the
+  existing literature, with particular reference to a musical context.
+  The following presents a system for empirical testing of the Ableton Link
+  library using the Jepsen\cite{jepsen} testing framework, along with a set of criteria
+  for evaluting similar libraries that may be developed in future.
+
 \end{abstract}
 
-\section{Section one}
+\section{Introduction}
 
 This is a sample section.
 
-\section{Section two}
+\section{Background research}
 
-An example of a reference:
-\cite{hastie/etal:2009}.
+Research goes here.
 
 \section{Section three}
 \section{Section four}
