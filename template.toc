@@ -1,8 +1,16 @@
 \contentsline {section}{\numberline {1}Introduction}{1}
-\contentsline {section}{\numberline {2}Background research}{1}
-\contentsline {section}{\numberline {3}Section three}{1}
-\contentsline {section}{\numberline {4}Section four}{1}
-\contentsline {section}{\numberline {5}Section five}{1}
-\contentsline {section}{\numberline {6}Section six}{1}
-\contentsline {section}{\numberline {7}Section seven}{1}
-\contentsline {section}{References}{1}
+\contentsline {subsection}{\numberline {1.1}Fundamental problems of music synchronization}{1}
+\contentsline {subsection}{\numberline {1.2}About Ableton Link}{1}
+\contentsline {section}{\numberline {2}Background research}{2}
+\contentsline {subsection}{\numberline {2.1}Prior testing approaches}{2}
+\contentsline {section}{\numberline {3}Criteria and design}{2}
+\contentsline {section}{\numberline {4}Experimental results}{2}
+\contentsline {section}{\numberline {5}Analysis}{2}
+\contentsline {section}{\numberline {6}Further work}{2}
+\contentsline {section}{\numberline {7}Conclusions}{2}
+\contentsline {section}{\numberline {8}Acknowledgements}{2}
+\contentsline {section}{References}{2}
+\contentsline {section}{\numberline {A}Running the tests}{3}
+\contentsline {section}{\numberline {B}Configuring Jepsen to support other systems}{3}
+\contentsline {section}{\numberline {C}Code listings}{3}
+\contentsline {section}{\numberline {D}Professional issues}{3}

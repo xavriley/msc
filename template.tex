@@ -26,24 +26,6 @@
 
 \declaration
 
-% Motivations
-%
-% Artistic output but also, music industry is large and $$$
-% requirements of a musical performance
-% - ensemble
-% - timekeeping (layers - a year is one orbit of the sun, a day one rotation on the earths' axis)
-% - colocated as opposed to geo-distributed
-% clock synchronization literature
-% - internal, external, pulse based - how have these been applied to music so far? Which work well?
-% distributed systems and music
-% - what distinguishes music from the rest of the clock synchronization
-%   literature?
-% - music (and clock sync) is not linear data! Consistency is not the primary issue. If a peer drifts or goes out of time,
-%   it doesn't create merge problems. It can simply restart and all is well. Largely stateless
-% - the challenge is mainly keeping tight synchronization bounds for as much time as possible
-% - also practical challenges around the experience for those using the software
-% - there are *some* consistency issues though. For example, synchronizing on current tempo and other transport messages
-
 % assessment criteria
 % - bounds on synchronization
 % - message complexity /bandwidth
@@ -68,11 +50,6 @@
 % convergence time, stability, resilience to pertubations. Also check how clock
 % sync literature handles this.
 % The main thing is that the tempo stays in sync for as much time as possible
-
-% how to test it? One option - get several devices and record into same soundcard
-% has the benefit of being a realistic test, easier to get setup
-% other option - use soundflower and write to a multichannel wav - maybe more reproducible
-% more scientific - setup jepsen and log timestamps
 
 % further ideas - even better internal sync (at the cost of bandwidth) - Google paper
 % resettable oscillators - more naturally maps onto how humans synchronize perhaps
@@ -107,31 +84,130 @@
 \begin{abstract}
   With the recent explosion of connected musical devices, the challenge of
   making these play "in time" with each other mounts against application
-  developers and device manufacturers. Ableton Link\cite{goltz2018ableton} aims to provide robust,
-  resilient musical synchronization using principles from distributed systems
-  programming, in contrast to previous master/slave approaches. However the
-  evaluation criteria for such a system are not well represented in the
-  existing literature, with particular reference to a musical context.
-  The following presents a system for empirical testing of the Ableton Link
-  library using the Jepsen\cite{jepsen} testing framework, along with a set of criteria
-  for evaluting similar libraries that may be developed in future.
-
+  developers and device manufacturers. Ableton Link\cite{goltz2018ableton} aims
+  to provide robust, resilient musical synchronization using principles from
+  distributed systems programming, in contrast to previous master/slave
+  approaches. However the evaluation criteria for such a system are not well
+  represented in the existing literature, with particular reference to a
+  musical context.  The following presents a system for empirical testing of
+  the Ableton Link library using the Jepsen\cite{jepsen} testing framework,
+  along with a set of criteria for evaluting similar libraries that may be
+  developed in future.
 \end{abstract}
+
+% Motivations
+%
+% Artistic output but also, music industry is large and $$$
+% requirements of a musical performance
+% - ensemble
+% - timekeeping (layers - a year is one orbit of the sun, a day one rotation on the earths' axis)
+% - colocated as opposed to geo-distributed
+% clock synchronization literature
+% - internal, external, pulse based - how have these been applied to music so far? Which work well?
+% distributed systems and music
+% - what distinguishes music from the rest of the clock synchronization
+%   literature?
+% - music (and clock sync) is not linear data! Consistency is not the primary issue. If a peer drifts or goes out of time,
+%   it doesn't create merge problems. It can simply restart and all is well. Largely stateless
+% - the challenge is mainly keeping tight synchronization bounds for as much time as possible
+% - also practical challenges around the experience for those using the software
+% - there are *some* consistency issues though. For example, synchronizing on current tempo and other transport messages
 
 \section{Introduction}
 
-This is a sample section.
+% this intro feels like a lot of statements without citations
+% but maintaining a flow is difficult
+
+The synchronizing of events is fundamental to our perception of musical
+performance. Where performers are using networked connected devices, the
+challenge incorporates the well studied problem of clock synchronization from
+distributed systems.
+
+As network technologies continue to grow in usage and importance to musical
+performances\cite{madgwick2015simple}, it becomes increasingly important to
+find common approaches to allow devices and applications to synchronize without
+reliance on proprietary protocols. Music programming environments in the
+academic space are well catered for in this regard, however applications in the
+consumer market have tended to lag behind advances in technology. Either the
+production of music is limited to a single device, or additional devices are
+synchronized using specialized hardware dedicated to synchronizing frames.
+
+\subsection{Fundamental problems of music synchronization}
+
+* getting clocks in sync
+* keeping them in sync (drift, latency)
+* network bandwidth (commodity network hardware, high number of devices)
+* fault tolerance (master availability, *musical* consistency, convergence time)
+* ease of setup and deployment
+
+\subsection{About Ableton Link}
+
+Ableton Link aims to solve some of these issues by supplying an open source,
+permissively licensed C++ library for integration with application code. As
+well as the popular digital audio workstation Ableton Live, implementations
+exist for a large number of mobile applications and for many of the popular
+music programming environments.
+
+It differs from existing approaches in that it does not rely on a master
+process to propagate timing information directly. Instead nodes will establish
+a session, using a reference to the start time of the oldest member of the
+group even if that member is no longer present.
+
+Clock synchronization is performed using a Kalman filter\cite{} which adds a
+level of robustness to jitter introduced by the network along with a more
+accurate reflection of the real delay. This approach is relatively
+sophisticated when compared with others using Cristian algorithm.
+
+Integration is handled by application developers who are left to integrate a
+small API. C++ has widespread support for integration with many popular
+languages, making this viable for the majority of existing applications.
+
+Setup for the end user is virtually transparent - network discovery takes place
+automatically on all interfaces. Clock synchronization is performed
+automatically for nodes joining a session and then at 60 second intervals
+afterwards. Simple transport commands (start, stop) and tempo changes are also
+propagated automatically by reliable broadcast.
+
+Failures, drop outs and re-entry are all handled with a model of eventual
+consistency where last-write-wins takes effect for changes in tempo and
+transport state.
 
 \section{Background research}
 
-Research goes here.
+The use of networks in computer music is an active area of study, with much of
+the research being driven by "laptop orchestras"\cite{trueman2007laptop}
+centered around academic institutions. This has led to approaches centering
+around the Open Sound Control
+protocol\cite{wright2005open}\cite{madgwick2015simple}\cite{narveson2013landini}
+as the "lingua franca" of connected musical applications, although older
+methods include the use of MIDI, SMPTE and other standards - see
+Goltz\cite{goltz2018ableton} for a review of these.
 
-\section{Section three}
-\section{Section four}
-\section{Section five}
-\section{Section six}
-\section{Section seven}
+\subsection{Prior testing approaches}
+
+% how to test it? One option - get several devices and record into same soundcard
+% has the benefit of being a realistic test, easier to get setup
+% other option - use soundflower and write to a multichannel wav - maybe more reproducible
+% more scientific - setup jepsen and log timestamps
+
+* in production/performance (Landini)
+* via hardware recording to sound file (PiGMI + Landini)
+
+% experimental - experimental results, analysis, conclusions
+\section{Criteria and design}
+\section{Experimental results}
+\section{Analysis}
+\section{Further work}
+\section{Conclusions}
+\section{Acknowledgements}
 
 \bibliographystyle{plain}
 \bibliography{bibliography}
+
+\appendix
+\section{Running the tests}
+\section{Configuring Jepsen to support other systems}
+\section{Code listings}
+\section{Professional issues}
+
 \end{document}

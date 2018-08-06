@@ -11,4 +11,25 @@ Florian Goltz.
   injection, 2018.
 \newblock [Online; accessed 6-August-2018].
 
+\bibitem{madgwick2015simple}
+Sebastian~OH Madgwick, Thomas~J Mitchell, Carlos Barreto, and Adrian Freed.
+\newblock Simple synchronisation for open sound control.
+\newblock 2015.
+
+\bibitem{narveson2013landini}
+Jascha Narveson and Dan Trueman.
+\newblock Landini: a networking utility for wireless lan-based laptop
+  ensembles.
+\newblock In {\em Proc. SMC Sound, Music and Computing Conference}, 2013.
+
+\bibitem{trueman2007laptop}
+Dan Trueman.
+\newblock Why a laptop orchestra?
+\newblock {\em Organised Sound}, 12(2):171--179, 2007.
+
+\bibitem{wright2005open}
+Matthew Wright.
+\newblock Open sound control: an enabling technology for musical networking.
+\newblock {\em Organised Sound}, 10(3):193--200, 2005.
+
 \end{thebibliography}
