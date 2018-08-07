@@ -1,22 +1,24 @@
 \contentsline {section}{\numberline {1}Introduction}{1}
-\contentsline {subsection}{\numberline {1.1}Fundamental problems of music synchronization}{1}
-\contentsline {subsection}{\numberline {1.2}About Ableton Link}{1}
-\contentsline {section}{\numberline {2}Background research}{2}
-\contentsline {subsection}{\numberline {2.1}Prior testing approaches}{2}
-\contentsline {section}{\numberline {3}Criteria and design}{2}
-\contentsline {subsection}{\numberline {3.1}Consistency in a musical context}{2}
-\contentsline {subsection}{\numberline {3.2}Accuracy versus Bandwidth}{2}
-\contentsline {subsection}{\numberline {3.3}Use of Jepsen, Docker and log parsing}{2}
-\contentsline {subsection}{\numberline {3.4}Topologies and latencies}{3}
-\contentsline {section}{\numberline {4}Experimental results}{3}
-\contentsline {section}{\numberline {5}Analysis}{3}
-\contentsline {subsection}{\numberline {5.1}Identifying and triggering invalid states}{3}
-\contentsline {section}{\numberline {6}Further work}{3}
-\contentsline {section}{\numberline {7}Conclusions}{3}
-\contentsline {section}{References}{3}
-\contentsline {section}{\numberline {A}Self assessment}{4}
-\contentsline {section}{\numberline {B}Running the tests}{4}
-\contentsline {section}{\numberline {C}Configuring Jepsen to support other systems and tests}{4}
-\contentsline {section}{\numberline {D}Code listings}{4}
-\contentsline {section}{\numberline {E}Professional issues}{4}
-\contentsline {section}{\numberline {F}Acknowledgements}{4}
+\contentsline {subsection}{\numberline {1.1}About Ableton Link}{1}
+\contentsline {subsection}{\numberline {1.2}Evaluating synchronization for music systems}{2}
+\contentsline {subsection}{\numberline {1.3}Fundamental problems of music synchronization}{2}
+\contentsline {section}{\numberline {2}Background research}{3}
+\contentsline {subsection}{\numberline {2.1}Finding bounds - the limits of human perception}{3}
+\contentsline {subsection}{\numberline {2.2}Prior testing approaches}{4}
+\contentsline {section}{\numberline {3}Criteria and design}{4}
+\contentsline {subsection}{\numberline {3.1}Consistency in a musical context}{5}
+\contentsline {subsection}{\numberline {3.2}Synchronization Accuracy versus Bandwidth}{5}
+\contentsline {subsection}{\numberline {3.3}Use of Jepsen, Docker and log parsing}{5}
+\contentsline {subsection}{\numberline {3.4}Topologies and latencies}{6}
+\contentsline {section}{\numberline {4}Experimental results}{7}
+\contentsline {section}{\numberline {5}Analysis}{7}
+\contentsline {subsection}{\numberline {5.1}Identifying and triggering invalid states}{7}
+\contentsline {section}{\numberline {6}Further work}{7}
+\contentsline {section}{\numberline {7}Conclusions}{7}
+\contentsline {section}{References}{7}
+\contentsline {section}{\numberline {A}Self assessment}{9}
+\contentsline {section}{\numberline {B}Running the tests}{9}
+\contentsline {section}{\numberline {C}Configuring Jepsen to support other systems and tests}{9}
+\contentsline {section}{\numberline {D}Code listings}{9}
+\contentsline {section}{\numberline {E}Professional issues}{9}
+\contentsline {section}{\numberline {F}Acknowledgements}{9}

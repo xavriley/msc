@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex template"] 1533592487 "template.aux" "template.bbl" "template" 1533592504
+["bibtex template"] 1533678059 "template.aux" "template.bbl" "template" 1533680276
   "/usr/local/texlive/2018basic/texmf-dist/bibtex/bst/base/plain.bst" 1480098433 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "bibliography.bib" 1533586744 1492 ad8b4e416fa8f826b4bec4397c7b29a0 ""
-  "template.aux" 1533592504 2321 bfdb3ee26f2b8889e6feba0a968edbc6 ""
+  "bibliography.bib" 1533675845 3964 e24b40791e8721b049561fa2d1fba51b ""
+  "template.aux" 1533680276 3045 087a701d71b522fd9736c2453e7f76e0 ""
   (generated)
   "template.blg"
   "template.bbl"
-["pdflatex"] 1533592503 "template.tex" "template.pdf" "template" 1533592504
+["pdflatex"] 1533680275 "template.tex" "template.pdf" "template" 1533680276
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1480098698 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -36,6 +36,7 @@
   "/usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1480098733 32080 340ef9bf63678554ee606688e7b5339d ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1480098733 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1480098733 32722 d7379af29a190c3f453aba36302ff5a9 ""
+  "/usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1480098733 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb" 1480098733 37944 359e864bd06cde3b1cf57bb20757fb06 ""
   "/usr/local/texlive/2018basic/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1480098806 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2018basic/texmf-dist/tex/generic/oberdiek/etexcmds.sty" 1480098815 7612 729a8cc22a1ee0029997c7f74717ae05 ""
@@ -58,6 +59,7 @@
   "/usr/local/texlive/2018basic/texmf-dist/tex/latex/amsmath/amstext.sty" 1523134290 2432 8ff93b1137020e8f21930562a874ae66 ""
   "/usr/local/texlive/2018basic/texmf-dist/tex/latex/base/article.cls" 1523050425 19823 fcbc01552b07b608574cbf8e1977e0c0 ""
   "/usr/local/texlive/2018basic/texmf-dist/tex/latex/base/latexsym.sty" 1523050425 2856 7730103c7f3589c6c9d963ace57a7c18 ""
+  "/usr/local/texlive/2018basic/texmf-dist/tex/latex/base/omscmr.fd" 1523050425 2472 aa08940f0a4dc6c24ae9f943b04ae0b9 ""
   "/usr/local/texlive/2018basic/texmf-dist/tex/latex/base/size11.clo" 1523050425 8310 c914ded44e64c3c6e0ed92e7ac6a2004 ""
   "/usr/local/texlive/2018basic/texmf-dist/tex/latex/base/ulasy.fd" 1523050425 2236 d19fc9d1775d819862989c760289e5a5 ""
   "/usr/local/texlive/2018basic/texmf-dist/tex/latex/graphics-cfg/graphics.cfg" 1480098830 1224 978390e9c2234eab29404bc21b268d1e ""
@@ -76,12 +78,12 @@
   "/usr/local/texlive/2018basic/texmf.cnf" 1523933242 628 fc6344cfe40d0ae2a8eba43e51328a06 ""
   "BigDataStyle.txt" 1403681130 2730 7d511d5edf50d446fc78f4ffe3bbcf0d ""
   "RHULlogo.jpg" 1386315860 29718 d184daeb9db64af12327e604245210a8 ""
-  "template.aux" 1533592504 2321 bfdb3ee26f2b8889e6feba0a968edbc6 ""
-  "template.bbl" 1533592487 1109 943991fe4574d2d3dc697b74c78a1c7e "bibtex template"
-  "template.tex" 1533592503 10834 fc2acb8f7344cae47cad5bc4ce0f6e29 ""
-  "template.toc" 1533592504 1483 ee1ba3774e406ae098a6b15b46940505 ""
+  "template.aux" 1533680276 3045 087a701d71b522fd9736c2453e7f76e0 ""
+  "template.bbl" 1533678059 2807 d78693d495023ca54e9c9d5a2faaf5ed "bibtex template"
+  "template.tex" 1533680275 20003 65b84b9d498b9f826a377592ec5ea760 ""
+  "template.toc" 1533680276 1688 4611dbbaa205afc5397daa581c24213d ""
   (generated)
-  "template.pdf"
-  "template.log"
   "template.toc"
   "template.aux"
+  "template.pdf"
+  "template.log"

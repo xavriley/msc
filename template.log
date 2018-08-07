@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.7.3)  6 AUG 2018 22:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.7.3)  7 AUG 2018 23:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -213,20 +213,27 @@ Package pdftex.def Info: RHULlogo.jpg  used on input line 25.
 \tf@toc=\write3
 \openout3 = `template.toc'.
 
- [2] [1] [2] (./template.bbl [3]) [4] (./template.aux) ) 
+ [2]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 153.
+ (/usr/local/texlive/2018basic/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 153.
+ [1] [2] [3] [4] [5] [6] (./template.bbl [7]) [8] [9] (./template.aux) ) 
 Here is how much of TeX's memory you used:
- 2474 strings out of 494091
- 33396 string characters out of 6163524
- 93814 words of memory out of 5000000
- 6098 multiletter control sequences out of 15000+600000
+ 2497 strings out of 494091
+ 33816 string characters out of 6163524
+ 93835 words of memory out of 5000000
+ 6118 multiletter control sequences out of 15000+600000
  12429 words of font info for 49 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 41i,6n,25p,275b,203s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on template.pdf (8 pages, 127027 bytes).
+ 41i,6n,25p,275b,205s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on template.pdf (13 pages, 152733 bytes).
 PDF statistics:
- 52 PDF objects out of 1000 (max. 8388607)
- 35 compressed objects within 1 object stream
+ 72 PDF objects out of 1000 (max. 8388607)
+ 49 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

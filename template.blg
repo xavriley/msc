@@ -3,46 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: template.aux
 The style file: plain.bst
 Database file #1: bibliography.bib
-Warning--empty journal in madgwick2015simple
-You've used 6 entries,
+You've used 12 entries,
             2118 wiz_defined-function locations,
-            531 strings with 4831 characters,
-and the built_in function-call counts, 1689 in all, are:
-= -- 159
-> -- 64
-< -- 1
-+ -- 26
-- -- 20
-* -- 98
-:= -- 286
-add.period$ -- 18
-call.type$ -- 6
-change.case$ -- 28
+            574 strings with 6103 characters,
+and the built_in function-call counts, 3989 in all, are:
+= -- 400
+> -- 155
+< -- 6
++ -- 65
+- -- 50
+* -- 241
+:= -- 641
+add.period$ -- 40
+call.type$ -- 12
+change.case$ -- 59
 chr.to.int$ -- 0
-cite$ -- 7
-duplicate$ -- 72
-empty$ -- 153
-format.name$ -- 20
-if$ -- 354
+cite$ -- 12
+duplicate$ -- 180
+empty$ -- 338
+format.name$ -- 50
+if$ -- 869
 int.to.chr$ -- 0
-int.to.str$ -- 6
-missing$ -- 5
-newline$ -- 33
-num.names$ -- 12
-pop$ -- 39
+int.to.str$ -- 12
+missing$ -- 11
+newline$ -- 63
+num.names$ -- 24
+pop$ -- 80
 preamble$ -- 1
-purify$ -- 22
+purify$ -- 49
 quote$ -- 0
-skip$ -- 49
+skip$ -- 126
 stack$ -- 0
-substring$ -- 84
-swap$ -- 12
-text.length$ -- 1
+substring$ -- 210
+swap$ -- 53
+text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 24
-warning$ -- 1
-while$ -- 17
-width$ -- 7
-write$ -- 64
-(There was 1 warning)
+type$ -- 46
+warning$ -- 0
+while$ -- 38
+width$ -- 14
+write$ -- 138
