@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex template"] 1533855614 "template.aux" "template.bbl" "template" 1533855685
+["bibtex template"] 1533856220 "template.aux" "template.bbl" "template" 1533856282
   "/usr/local/texlive/2018basic/texmf-dist/bibtex/bst/base/plain.bst" 1480098433 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
   "bibliography.bib" 1533675845 3964 e24b40791e8721b049561fa2d1fba51b ""
-  "template.aux" 1533855681 3051 07ddb184858357c6e06401125702080b ""
+  "template.aux" 1533856282 3056 488e5e3c3dc792b409f63c15881b4f7e ""
   (generated)
   "template.bbl"
   "template.blg"
-["pdflatex"] 1533855681 "template.tex" "template.pdf" "template" 1533855685
+["pdflatex"] 1533856281 "template.tex" "template.pdf" "template" 1533856282
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
   "/usr/local/texlive/2018basic/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1480098698 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -89,11 +89,19 @@
   "/usr/local/texlive/2018basic/texmf.cnf" 1523933242 628 fc6344cfe40d0ae2a8eba43e51328a06 ""
   "BigDataStyle.txt" 1403681130 2730 7d511d5edf50d446fc78f4ffe3bbcf0d ""
   "RHULlogo.jpg" 1386315860 29718 d184daeb9db64af12327e604245210a8 ""
-  "plot.pdf" 1533855679 51932 73861e881efd9a94ab7b1d8faccbc31b ""
-  "template.aux" 1533855681 3051 07ddb184858357c6e06401125702080b ""
-  "template.bbl" 1533855614 2807 d78693d495023ca54e9c9d5a2faaf5ed "bibtex template"
-  "template.tex" 1533855612 20654 55a9b87a2c03ca41325c03db4f58ad54 ""
-  "template.toc" 1533855681 1694 9a35f9f8e05710e6c628f77d905c5d91 ""
+  "figures-for-publication/bridge-500ms-delay/plot.pdf" 1533854339 55176 3b6c935eb22f70eec91fcfbd9942d6d6 ""
+  "figures-for-publication/bridge-50ms-delay/plot.pdf" 1533853211 53887 ba11b9e755315e0f76802a2bee4a2834 ""
+  "figures-for-publication/bridge-no-delay/plot.pdf" 1533851885 52918 63491c3d1b5c42f6941ed50c7504bcc5 ""
+  "figures-for-publication/connected-500ms-delay/plot.pdf" 1533854018 52313 d87c11c2c33b40ed4f0b1a095884186c ""
+  "figures-for-publication/connected-50ms-delay/plot.pdf" 1533852769 53373 901a9969a0b434e7917308ddc29c553e ""
+  "figures-for-publication/connected-no-delay/plot.pdf" 1533851406 51520 eb0047cd7b3660d4b5efb91eda1b1a38 ""
+  "figures-for-publication/line-500ms-delay/plot.pdf" 1533854630 60076 4fc795f64c2807600ffaf94a173bb889 ""
+  "figures-for-publication/line-50ms-delay/plot.pdf" 1533853545 52787 b33abd7a169f22d4fc02af275a8a594d ""
+  "figures-for-publication/line-no-delay/plot.pdf" 1533852214 49503 85486a281717e6fd3e00f1b45fdb6104 ""
+  "template.aux" 1533856282 3056 488e5e3c3dc792b409f63c15881b4f7e ""
+  "template.bbl" 1533856220 2807 d78693d495023ca54e9c9d5a2faaf5ed "bibtex template"
+  "template.tex" 1533856280 21539 6c71c4e8141678cad4deb6c0056704a7 ""
+  "template.toc" 1533856282 1699 b7e7165a63c85499288be2a794a057a5 ""
   (generated)
   "template.toc"
   "template.pdf"

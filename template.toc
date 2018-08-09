@@ -11,14 +11,14 @@
 \contentsline {subsection}{\numberline {3.3}Use of Jepsen, Docker and log parsing}{6}
 \contentsline {subsection}{\numberline {3.4}Topologies and latencies}{6}
 \contentsline {section}{\numberline {4}Experimental results}{7}
-\contentsline {section}{\numberline {5}Analysis}{9}
-\contentsline {subsection}{\numberline {5.1}Identifying and triggering invalid states}{9}
-\contentsline {section}{\numberline {6}Further work}{9}
-\contentsline {section}{\numberline {7}Conclusions}{9}
-\contentsline {section}{References}{9}
-\contentsline {section}{\numberline {A}Self assessment}{10}
-\contentsline {section}{\numberline {B}Running the tests}{10}
-\contentsline {section}{\numberline {C}Configuring Jepsen to support other systems and tests}{10}
-\contentsline {section}{\numberline {D}Code listings}{10}
-\contentsline {section}{\numberline {E}Professional issues}{10}
-\contentsline {section}{\numberline {F}Acknowledgements}{10}
+\contentsline {section}{\numberline {5}Analysis}{17}
+\contentsline {subsection}{\numberline {5.1}Identifying and triggering invalid states}{17}
+\contentsline {section}{\numberline {6}Further work}{17}
+\contentsline {section}{\numberline {7}Conclusions}{17}
+\contentsline {section}{References}{17}
+\contentsline {section}{\numberline {A}Self assessment}{18}
+\contentsline {section}{\numberline {B}Running the tests}{18}
+\contentsline {section}{\numberline {C}Configuring Jepsen to support other systems and tests}{18}
+\contentsline {section}{\numberline {D}Code listings}{18}
+\contentsline {section}{\numberline {E}Professional issues}{18}
+\contentsline {section}{\numberline {F}Acknowledgements}{18}
