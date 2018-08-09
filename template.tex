@@ -1,6 +1,7 @@
 \documentclass[11pt]{article} % do not change this line
 \input{BigDataStyle.txt}      % do not change this line
 \usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx}
+\usepackage{pdfpages}
 
 \emergencystretch=5mm
 \tolerance=400
@@ -287,10 +288,8 @@ is also flexible enough to test systems with less strict guarantees.
 The framework starts 5 instances running a simple Ableton Link application
 inside Linux containers using Docker. In addition to these, a control node is
 started which invokes and records operations against the existing nodes.
-Primarily this is concerned with read and write operations against the tempo
-parameter of the Link session. Each node is also logging it's status at each
-beat. These are then analyzed following the test to calculate the offsets and
-convergence of events following changes in tempo.
+Primarily this is concerned observing stability and consistency under read and
+write operations against the tempo parameter of the Link session.
 
 The Jepsen framework also allows the control node to introduce faults into the
 virtual network between the nodes. Under initial conditions they are all
@@ -298,6 +297,17 @@ connected, however links between nodes can be cut (packets between nodes all
 dropped) to form different topologies. Variable or fixed latency can also be
 introduced. These take place via a process called a "nemesis" in the framework
 terminology.
+
+The format of the test is as follows: nodes are started and allowed to join the
+session automatically. The control node then sequences a cycle of read, write,
+write operations on the tempo field with a random tempo between 20 and 220
+representing the usual range of musical tempos. These operations are performed
+on a randomly selected node, spaced at an interval of 2 seconds apart. This
+continues for 60 operations totalling around 180 seconds. This figure was
+picked to correspond to the traditional 3 minute pop song. Each node is also
+logging its state at each beat, the placement of the beat being determined by
+the Link protocol. These are then analyzed following the test to calculate the
+offsets and convergence of events following changes in tempo.
 
 \subsection{Consistency in a musical context}
 
@@ -371,16 +381,18 @@ length of the maximum path length for an update to be propagated.
 \end{itemize}
 
 Another test condition concerns the performance of the protocol under small,
-constant network delays. In the tests below this is defined as 100ms delays,
+constant network delays. In the tests below this is defined as 50ms delays,
 which for clock synchronization messages results in a round trip time delta of
-+200ms.
++100ms.
 
-Finally the protocol is exercised in the presence of large, variable or uneven
-network delays. The timings for these are included on the charts below.
+Finally the protocol is exercised in the presence of larger delays (500ms - 1s
+RTT). The timings for these are included on the charts below.
 
 \section{Experimental results}
 
-Results here, maybe detailed graphs in appendix
+Connected, 0ms delay
+
+\includepdf[pages=-]{plot.pdf}
 
 \section{Analysis}
 
