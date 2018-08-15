@@ -2,6 +2,9 @@
 \input{BigDataStyle.txt}      % do not change this line
 \usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx}
 \usepackage{pdfpages}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
 
 \emergencystretch=5mm
 \tolerance=400
@@ -28,12 +31,12 @@
 \declaration
 
 % assessment criteria
-% - bounds on synchronization
-% - message complexity /bandwidth
-% - difficulty of setup/integration
-% - failure modes
-% - resilience to drift
-% - topology / spof?
+% - synchronization accuracy under various delays
+% - message complexity/bandwidth
+% - difficulty of setup/integration (useability)
+% - failure modes/spof? (f failures, failure of leader)
+% - resilience to drift (how often do we resync?)
+% - available topologies, effect on performance (ideally constant with diameter of graph)
 
 % Ableton Live
 % - aims, tradeoffs, assumptions (reliable network)
@@ -140,6 +143,26 @@ of music is limited to a single device, or additional devices are synchronized
 using specialized hardware dedicated to synchronizing frames e.g. MIDI, SMTPE -
 see Goltz\cite{goltz2018ableton} for a review of these methods.
 
+\subsection{Colocated vs. Geo-distributed}
+
+When considering the synchronization of musical programs and important
+distinction is whether the participants are "within earshot" of each other. If
+performers are distributed across a large geographic distance, such that they
+could not reasonable hear the audible output of their peers, then staying
+within the thresholds of tolerable latency starts to become impossible. This
+means that performers cannot react to each other in a typical way due to the
+effect of lag.
+
+The position taken in this work is that geo-distributed performance is more a
+matter of maintaining a locally consistent ordering of events and relative
+timings, and as such is not under the scope of discussion here.
+
+TODO: reference PhD on global metronome and other approaches to the above.
+
+Focusing on colocated performance, the prime objective becomes to achieve and
+maintain synchrony between devices. Secondary concerns include maximum
+convergence time on any relevant notions of shared state, e.g. tempo,
+start/stop times.
 
 \subsection{About Ableton Link}
 
@@ -164,8 +187,9 @@ group even if that member is no longer present.
 Clock synchronization is performed using a Kalman
 filter\cite{bletsas2005evaluation} which adds a level of robustness to jitter
 introduced by the network along with a more accurate reflection of the real
-delay. This approach is relatively sophisticated when compared with others
-using basic averaging algorithms.
+delay under certain conditions. This approach appears to be relatively
+sophisticated when compared with other music programs using basic averaging
+algorithms such as NTP.
 
 Implementation is handled by application developers who are left to integrate a
 small API. C++ has widespread support for integration with many popular
@@ -184,15 +208,17 @@ transport state.
 \subsection{Evaluating synchronization for music systems}
 
 With the advent of distributed systems for music applications, there are
-natural questions around how these should be assessed to determine
-their effectiveness. Traditional criteria from distributed systems research
-may be useful, particularly around the bounds synchronization, however musical
-performance doesn't have the same strict requirements as traditional databases,
-for example.
+natural questions around how these should be assessed to determine their
+effectiveness. Traditional criteria from distributed systems research may be
+useful, particularly around the bounds for timing synchronization, however
+musical performance doesn't have the same requirements as traditional
+databases, for example. A musical tempo can diverge and converge again with
+only minor consequences, however avoiding a double spend for a bank account
+requires more careful treatment.
 
 This means that bounds for synchronization and notions of data consistency may
-be relaxed if doing so would benefit some other aspect, such as ease of setting
-up.
+be relaxed if doing so would benefit some other aspect, such as ease of
+setup/integration.
 
 \subsection{Fundamental problems of music synchronization}
 
@@ -244,16 +270,16 @@ theoretically introduce comb filtering effects in the audible frequency range
 at 10kHz\cite{lester2007effects} so this may offer a more practical lower bound.
 
 In terms of an upper bound, 40ms of delay would appear to be the upper limit in
-terms of the impact on the majority of listeners. Where human performers are involved,
-this is more likely to impact their output so a lower figure of 20ms may be
-more appropriate.
+terms of the impact on the majority of listeners. Where human performers are
+involved, this is more likely to impact their ability to play, so a lower
+figure of 20ms may be more appropriate. TODO ref paper
 
 \subsection{Prior testing approaches}
 
 LANdini\cite{narveson2013landini} was designed for use with a specific laptop
 orchestra in mind and was "tested" in rehearsal and performance. Functional
-testing is also described in their paper regarding message delivery and
-bandwidth usage.
+testing is also described in their paper regarding reliability of message
+delivery and bandwidth usage.
 
 A more rigorous testing scheme is proposed in the development of
 PiGMI\cite{Oda2016} (The Raspbery Pi Global Metronome) in which metronome
@@ -265,14 +291,14 @@ clock, to add a benchmark.
 
 This method of testing allows for excellent accuracy measuring "time at
 speaker" which is arguably the most realistic metric available; However, the
-recording and analysis appear to be labour intensive and the reliance on
-physical hardware makes replication of results more challenging.
+recording, analysis methods and the reliance on physical hardware makes
+replication of results more challenging.
 
 A similar result may be achieved using virtual audio inputs on a single machine
-e.g. using the Soundflower application on OS X, however these are subject to
-their own sources of latency and solution that relies on the system clock would
-not be able to detect drift relative to real time if additional reference time
-sources are not used also.
+e.g. using the Soundflower application on OS X, however such solutions are
+subject to their own sources of latency. In addition, testing within a single
+machine in this way would not allow for detecting drift in the system clock,
+relative to real time, if additional reference time sources are not also used.
 
 \section{Criteria and design}
 
@@ -304,16 +330,70 @@ write operations on the tempo field with a random tempo between 20 and 220
 representing the usual range of musical tempos. These operations are performed
 on a randomly selected node, spaced at an interval of 2 seconds apart. This
 continues for 60 operations totalling around 180 seconds. This figure was
-picked to correspond to the traditional 3 minute pop song. Each node is also
-logging its state at each beat, the placement of the beat being determined by
-the Link protocol. These are then analyzed following the test to calculate the
-offsets and convergence of events following changes in tempo.
+picked to correspond to the traditional 3 minute pop song.
+
+Each node also logs its state at each beat (see Algorithm 1), the placement of
+the beat being determined by the Link protocol. These are then analysed
+following the test to calculate the offsets and convergence of events following
+changes in tempo.
+
+This approach could be criticised as being less accurate - the processing time
+can introduce variations such that the status is not printed exactly on the
+beat - however this is more typical of the usage in a real world
+implementation. In measuring convergence (described below) the log analysis
+groups the status output from all nodes to within a 100ms window to account for
+any variations due to processing times. The maximum tempo used in this test is
+240 beats per minute which has an inter-beat interval of 250ms, larger than the
+uncertainty window in use.
+
+The alternative would be to calculate the status output at the point of the
+next beat. This was trialled, however changes from faster to slower tempi
+caused occurrences where the next beat at a slower tempo would have occurred
+before the current beat at a faster tempo, causing entries to go "back in
+time". These discontinuities in the timeline were clearly unrealistic and
+calculating the next beat from a given point in time would have introduced
+unnecessary complexity to the testing procedure.
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\begin{algorithm}
+  \caption{Test procedure}\label{linktest}
+\begin{algorithmic}[1]
+
+\BState \emph{loop}:
+\State \textbf{print} {$\textit{status}()$};
+\State \textbf{sleep} {$\textit{time-until-next-beat}()$};
+\State \textbf{goto} \emph{loop}.
+
+% \Procedure{TestProcedure}{}
+% \State $\textit{stringlen} \gets \text{length of }\textit{string}$
+% \State $i \gets \textit{patlen}$
+% \BState \emph{top}:
+% \If {$i > \textit{stringlen}$} \Return false
+% \EndIf
+% \State $j \gets \textit{patlen}$
+% \BState \emph{loop}:
+% \If {$\textit{string}(i) = \textit{path}(j)$}
+% \State $j \gets j-1$.
+% \State $i \gets i-1$.
+% \State \textbf{goto} \emph{loop}.
+% \State \textbf{close};
+% \EndIf
+% \State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
+% \State \textbf{goto} \emph{top}.
+% \EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Consistency in a musical context}
 
-The introduction of faults and pertubations to the network can cause nodes to
+The introduction of faults and perturbations to the network can cause nodes to
 receive updates late, resulting in divergence for the beat markers in the
-session. Provided the network remains connected these will recover eventually.
+session. Given that Ableton Link aims to provide eventual
+consistency\cite{vogels2009eventually} provided the network remains free of
+partitions these should recover eventually.
 
 This leads to an interesting question of how to quantify the divergence and the
 resulting effect on the music. This work puts forward that Ableton Link and
@@ -341,23 +421,78 @@ routers should be assumed. This makes it important to minimize the number of
 messages sent by the protocol to avoid overloading the hardware, while striving
 for the figures set out in tolerable latency above.
 
+The synchronization protocol of Link is not documented, however from analysis
+of the codebase it can be seen that clock synchronization events take place
+when a new peer is discovered, and then at 30 second intervals thereafter.
+
+%\begin{algorithm}
+%  \caption{Link clock synchronization}\label{linktest}
+%\begin{algorithmic}[1]
+
+  staleMessageThreshold = 50ms
+  measurementCount = 100
+  inFlight = 5
+
+  on discovery of new peer j
+    send msg ping j
+
+  recv_j_ pong
+    if not (pong.RemoteHostTime - currentHostTime) >  staleMessageThreshold
+      reject
+
+    while(sizeof(data) < measurementCount)
+      if inFlight < inFlightLimit
+      send msg pong_i_
+
+  recv_i_ ping
+    send <Host, GHost, pong>
+
+% \Procedure{TestProcedure}{}
+% \State $\textit{stringlen} \gets \text{length of }\textit{string}$
+% \State $i \gets \textit{patlen}$
+% \BState \emph{top}:
+% \If {$i > \textit{stringlen}$} \Return false
+% \EndIf
+% \State $j \gets \textit{patlen}$
+% \BState \emph{loop}:
+% \If {$\textit{string}(i) = \textit{path}(j)$}
+% \State $j \gets j-1$.
+% \State $i \gets i-1$.
+% \State \textbf{goto} \emph{loop}.
+% \State \textbf{close};
+% \EndIf
+% \State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
+% \State \textbf{goto} \emph{top}.
+% \EndProcedure
+
+%\end{algorithmic}
+%\end{algorithm}
+
+This involves the sending of at least 50 outbound messages and receiving at
+least 50 inbound messages under the default settings (these are not
+currently configurable by a public interface). Assuming a successful run every
+30 seconds with no rejected messages, this works out at 3.33 messages per
+second on average.
+
 \subsection{Use of Jepsen, Docker and log parsing}
 
 While Jepsen is primarily designed to exercise safety guarantees of distributed
-systems under partitions, the flexibility allows for different kinds of tests
-to be performed. This work opts mainly to use Jepsen to handle the running of
-tests and fault injection, whereas the analysis of results takes place in
-separate scripts.
+systems under partitions, the flexibility it offers allows for different kinds
+of tests to be performed. This work opts mainly to use Jepsen to handle the
+running of tests and fault injection, whereas the analysis of results takes
+place in a separate process which handles the parsing of log files generated
+during the test.
 
-The use of Docker containers allows straightforward reproducbility on
-development machines. One possible application would be in a continous
-integration testing environment so that changes to the Link codebase could be
+The use of Docker containers allows straightforward reproducibility across all
+major platforms. One possible application would be in a continuous integration
+(CI) testing environment so that changes to the Link codebase could be
 exercised against these tests automatically.
 
 As the Link protocol favours transparent setup over configuration, there is a
-limited about of information available regarding the state of the sesssion by
-default. For these tests the debug logging is enabled and these logs are then
-parsed following the test to produce the output in the results section below.
+limited about of information available regarding the state of the session by
+default. For these tests, the debug logging in the Link library is enabled and
+these logs are then parsed following the test to produce the output in the
+results section below.
 
 \subsection{Topologies and latencies}
 
@@ -369,15 +504,16 @@ one node existed that was connected to both.
 
 This feature introduces the prospect of topologies other than a connected
 network in practice. Jepsen allows different topologies to be defined and
-implemented during the test procedure. As Link operates using reliable
-broadcast (retransmitting the state of the session on all interfaces when a
-valid state update is received) the topologies may be ranked according to the
-length of the maximum path length for an update to be propagated.
+implemented during the test procedure. As Link operates using a type of
+reliable broadcast algorithm (retransmitting the state of the session on all
+interfaces when a valid state update is received) the topologies may be ranked
+according to the length of the maximum diameter of the network over which an
+update can be propagated.
 
 \begin{itemize}
-  \item Connected (easy)
-  \item Bridge (medium)
-  \item Line (hard)
+  \item Connected
+  \item Bridge
+  \item Line
 \end{itemize}
 
 Another test condition concerns the performance of the protocol under small,
@@ -412,11 +548,41 @@ Line, 500ms delay
 
 \section{Analysis}
 
-Resilient to different network conditions. Usually converges.
+Resilient to different network conditions. Usually converges. Musical consistency has linear? falloff.
 
-Talk about indeterminate divergence
+Talk about indeterminate divergence (missed statuses). Difficulty of measurements from a library with no configuration and little in the way of callbacks.
+
+\subsection{Effects of delay distributions on clock synchronization}
+
+Delay distributions and Kalman filtering - surprising results. Expected clock sync to track delays but apparently not.
+
+Bandwidth measurements - difficult for partitions - maybe set partitions up first to see
 
 \subsection{Identifying and triggering invalid states}
+
+Ping/pong measurement has hardcoded cap of 50ms for RTT
+Assuming RTT / 2 for latency calculation, this allows for max deviation of +/-25ms either side of leader
+Anyway, the offset can vary by delta
+
+Node A
+send msgA tempo(120), t = 100
+clock synchronization event - delta goes from 25ms to 0
+send msgB tempo(140), t = 99.075
+msgB is set locally (timestamp not checked for local updates)
+
+Node B
+recv msgA - newer than last tempo - set tempo = 120
+recv msgB - reject (older when timestamps are compared)
+broadcast state
+
+Node A
+recv state 120 with beat origin 100 - update? or not?
+
+all neighbours behave the same, therefore 120 will be accepted and converged on however this seems sub-optimal.
+
+If recv msgA is dropped/lost when received by Node C, then Node C will be tempo
+= 140. If Node C retransmits with it's own beat origin (arbitrarily higher) then an inconsistent state is reached.
+
 
 \section{Further work}
 
