@@ -1,0 +1,33 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Ping/pong measurement has hardcoded cap of 50ms for RTT}
+\PYG{c+c1}{\PYGZsh{} Assuming RTT / 2 for latency calculation, this allows}
+\PYG{c+c1}{\PYGZsh{} for a deviation of +/\PYGZhy{}25ms either side of leader}
+
+\PYG{c+c1}{\PYGZsh{} Node A \PYGZhy{} @nodeA.delta == 25ms}
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{set\PYGZus{}tempo}\PYG{p}{(}\PYG{l+m+mi}{120}\PYG{p}{)}
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{bcast}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{120}\PYG{p}{,} \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time}\PYG{o}{=\PYGZgt{}} \PYG{p}{(}\PYG{l+m+mi}{99}\PYG{o}{.}\PYG{l+m+mi}{975} \PYG{o}{+} \PYG{l+m+mi}{0}\PYG{o}{.}\PYG{l+m+mo}{025}\PYG{p}{)\PYGZcb{})}
+\PYG{c+c1}{\PYGZsh{} clock synchronization event \PYGZhy{} @nodeA.delta == 0m}
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{set\PYGZus{}tempo}\PYG{p}{(}\PYG{l+m+mi}{140}\PYG{p}{)}
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{bcast}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{140}\PYG{p}{,} \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time}\PYG{o}{=\PYGZgt{}} \PYG{p}{(}\PYG{l+m+mi}{99}\PYG{o}{.}\PYG{l+m+mi}{975} \PYG{o}{+} \PYG{l+m+mi}{0}\PYG{o}{.}\PYG{l+m+mi}{0}\PYG{p}{)\PYGZcb{})}
+\PYG{c+c1}{\PYGZsh{} 140 is set locally (timestamp not checked for local updates)}
+
+\PYG{c+c1}{\PYGZsh{} Node B}
+\PYG{n+nv+vi}{@nodeB}\PYG{o}{.}\PYG{n}{receive}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{120}\PYG{p}{,} \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{100}\PYG{o}{.}\PYG{l+m+mi}{0}\PYG{p}{\PYGZcb{})} \PYG{k}{do}
+  \PYG{k}{if} \PYG{n}{received\PYGZus{}global\PYGZus{}host\PYGZus{}time} \PYG{o}{\PYGZgt{}} \PYG{n}{current\PYGZus{}tempo}\PYG{o}{.}\PYG{n}{global\PYGZus{}host\PYGZus{}time}
+    \PYG{n+nv+vi}{@nodeB}\PYG{o}{.}\PYG{n}{set\PYGZus{}tempo}\PYG{p}{(}\PYG{n}{received\PYGZus{}tempo}\PYG{p}{)}
+    \PYG{n+nv+vi}{@nodeB}\PYG{o}{.}\PYG{n}{bcast}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{n}{received\PYGZus{}tempo}\PYG{p}{,}
+                  \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{n}{received\PYGZus{}global\PYGZus{}host\PYGZus{}time}\PYG{p}{\PYGZcb{})}
+  \PYG{k}{end}
+\PYG{k}{end}
+
+\PYG{c+c1}{\PYGZsh{} 120 has a higher global host time}
+\PYG{c+c1}{\PYGZsh{} 140 is therefore rejected, introducing temporary inconsistency}
+
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{receive}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{120}\PYG{p}{,} \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{100}\PYG{o}{.}\PYG{l+m+mi}{0}\PYG{p}{\PYGZcb{})}
+\PYG{c+c1}{\PYGZsh{} this is newer that the timestamp for @nodeA\PYGZsq{}s current tempo,}
+\PYG{c+c1}{\PYGZsh{} therefore @nodeA will adopt it}
+
+\PYG{c+c1}{\PYGZsh{} If @nodeA.receive(120) is dropped or lost when received by}
+\PYG{c+c1}{\PYGZsh{} @nodeC, then @nodeC will adopt 140 as the tempo, however it}
+\PYG{c+c1}{\PYGZsh{} should still converge.}
+\end{Verbatim}

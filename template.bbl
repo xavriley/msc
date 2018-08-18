@@ -17,6 +17,12 @@ Aggelos Bletsas.
 \newblock {\em ieee transactions on ultrasonics, ferroelectrics, and frequency
   control}, 52(9):1452--1460, 2005.
 
+\bibitem{chafe2004network}
+Chris Chafe and Michael Gurevich.
+\newblock Network time delay and ensemble accuracy: Effects of latency,
+  asymmetry.
+\newblock In {\em Audio Engineering Society Convention 117}, Oct 2004.
+
 \bibitem{lnxstudio}
 {Cosgrove, Neil}.
 \newblock Lnx studio, 2016.
@@ -90,6 +96,12 @@ Reid Oda and Rebecca Fiebrink.
 \newblock In {\em Proceedings of the International Conference on New Interfaces
   for Musical Expression}, volume~16 of {\em 2220-4806}, pages 26--31,
   Brisbane, Australia, 2016. Queensland Conservatorium Griffith University.
+
+\bibitem{oda2017tools}
+Reid~Kei Oda.
+\newblock {\em Tools and Techniques for Rhythmic Synchronization in Networked
+  Musical Performance}.
+\newblock PhD thesis, Princeton University, 2017.
 
 \bibitem{cockroach}
 {Poss, Raphael}.

@@ -1,0 +1,50 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Node A \PYGZhy{} @nodeA.delta == 25ms, @nodeA.logical\PYGZus{}time = 0}
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{set\PYGZus{}tempo}\PYG{p}{(}\PYG{l+m+mi}{120}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} @nodeA.lt += 1}
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{bcast}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{120}\PYG{p}{,}
+              \PYG{l+s+ss}{:logical\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{,}
+              \PYG{l+s+ss}{:counter} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{,}
+              \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time}\PYG{o}{=\PYGZgt{}} \PYG{p}{(}\PYG{l+m+mi}{99}\PYG{o}{.}\PYG{l+m+mi}{975} \PYG{o}{+} \PYG{l+m+mi}{0}\PYG{o}{.}\PYG{l+m+mo}{025}\PYG{p}{)\PYGZcb{})}
+\PYG{c+c1}{\PYGZsh{} clock synchronization event \PYGZhy{} @nodeA.delta == 0m}
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{set\PYGZus{}tempo}\PYG{p}{(}\PYG{l+m+mi}{140}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} @nodeA.lt += 1}
+\PYG{n+nv+vi}{@nodeA}\PYG{o}{.}\PYG{n}{bcast}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{140}\PYG{p}{,}
+              \PYG{l+s+ss}{:logical\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{2}\PYG{p}{,}
+              \PYG{l+s+ss}{:counter} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{,}
+              \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time}\PYG{o}{=\PYGZgt{}} \PYG{p}{(}\PYG{l+m+mi}{99}\PYG{o}{.}\PYG{l+m+mi}{975} \PYG{o}{+} \PYG{l+m+mi}{0}\PYG{o}{.}\PYG{l+m+mi}{0}\PYG{p}{)\PYGZcb{})}
+
+\PYG{c+c1}{\PYGZsh{} Node B \PYGZhy{} @nodeB.logical\PYGZus{}time = 0}
+\PYG{c+c1}{\PYGZsh{}        \PYGZhy{} @nodeB.global\PYGZus{}host\PYGZus{}time = 100.1}
+\PYG{n+nv+vi}{@nodeB}\PYG{o}{.}\PYG{n}{receive}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{120}\PYG{p}{,}
+                \PYG{l+s+ss}{:logical\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{l+s+ss}{:counter} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{100}\PYG{o}{.}\PYG{l+m+mi}{0}\PYG{p}{\PYGZcb{})} \PYG{k}{do}
+  \PYG{n+nv+vi}{@nodeB}\PYG{o}{.}\PYG{n}{logical\PYGZus{}time} \PYG{o}{=} \PYG{n}{max}\PYG{p}{(}\PYG{o}{[}\PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{logical\PYGZus{}time}\PYG{p}{,}
+                             \PYG{n}{received\PYGZus{}logical\PYGZus{}time}\PYG{p}{,}
+                             \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{global\PYGZus{}host\PYGZus{}time}\PYG{o}{]}\PYG{p}{)}
+
+  \PYG{k}{if} \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{logical\PYGZus{}time}\PYG{o}{.}\PYG{n}{unchanged?} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{p}{\PYGZbs{}}
+     \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{logical\PYGZus{}time} \PYG{o}{==} \PYG{n}{received\PYGZus{}logical\PYGZus{}time}
+    \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{counter} \PYG{o}{=} \PYG{n}{max}\PYG{p}{(}\PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{counter}\PYG{p}{,} \PYG{n}{received\PYGZus{}counter}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{1}
+  \PYG{n}{elseif} \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{logical\PYGZus{}time}\PYG{o}{.}\PYG{n}{unchanged?}
+    \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{counter} \PYG{o}{=} \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{counter} \PYG{o}{+} \PYG{l+m+mi}{1}
+  \PYG{n}{elseif} \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{logical\PYGZus{}time} \PYG{o}{==} \PYG{n}{received\PYGZus{}logical\PYGZus{}time}
+    \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{counter} \PYG{o}{=} \PYG{n}{received\PYGZus{}counter} \PYG{o}{+} \PYG{l+m+mi}{1}
+  \PYG{k}{else}
+    \PYG{n+nb}{self}\PYG{o}{.}\PYG{n}{counter} \PYG{o}{=} \PYG{l+m+mi}{0}
+  \PYG{k}{end}
+
+  \PYG{n+nv+vi}{@nodeB}\PYG{o}{.}\PYG{n}{set\PYGZus{}tempo}\PYG{p}{(}\PYG{n}{received\PYGZus{}tempo}\PYG{p}{)}
+  \PYG{n+nv+vi}{@nodeB}\PYG{o}{.}\PYG{n}{bcast}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{n}{received\PYGZus{}tempo}\PYG{p}{,}
+                \PYG{l+s+ss}{:logical\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{100}\PYG{o}{.}\PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{l+s+ss}{:counter} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{,}
+                \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{n}{received\PYGZus{}global\PYGZus{}host\PYGZus{}time}\PYG{p}{\PYGZcb{})}
+\PYG{k}{end}
+
+\PYG{c+c1}{\PYGZsh{} on receipt of tempo 140 at time 100.2}
+\PYG{c+c1}{\PYGZsh{} ...}
+\PYG{n+nv+vi}{@nodeB}\PYG{o}{.}\PYG{n}{bcast}\PYG{p}{(\PYGZob{}}\PYG{l+s+ss}{:tempo} \PYG{o}{=\PYGZgt{}} \PYG{n}{received\PYGZus{}tempo}\PYG{p}{,}
+              \PYG{l+s+ss}{:logical\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{100}\PYG{o}{.}\PYG{l+m+mi}{2}\PYG{p}{,}
+              \PYG{l+s+ss}{:counter} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{,}
+              \PYG{l+s+ss}{:global\PYGZus{}host\PYGZus{}time} \PYG{o}{=\PYGZgt{}} \PYG{n}{received\PYGZus{}global\PYGZus{}host\PYGZus{}time}\PYG{p}{\PYGZcb{})}
+\PYG{c+c1}{\PYGZsh{} ...}
+\end{Verbatim}
