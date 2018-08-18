@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c}{\PYGZsh{} clone project and note the path}
+git clone https://github.com/xavriley/jepsen\PYGZhy{}ableton\PYGZhy{}link.git
+
+\PYG{c}{\PYGZsh{} clone the Jepsen project to another folder}
+git clone https://github.com/jepsen\PYGZhy{}io/jepsen.git\PYGZsh{}0.1.9
+\PYG{n+nb}{cd }jepsen/docker
+\PYG{n+nb}{export }\PYG{n+nv}{JEPSEN\PYGZus{}ROOT}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}/path/to/jepsen.link\PYGZdq{}} \PYG{c}{\PYGZsh{} as noted above}
+./up.sh \PYGZhy{}\PYGZhy{}dev
+
+\PYG{c}{\PYGZsh{} in another window}
+docker \PYG{n+nb}{exec} \PYGZhy{}it jepsen\PYGZhy{}control bash
+\PYG{c}{\PYGZsh{} once the container has booted}
+lein run \PYG{n+nb}{test} \PYGZhy{}\PYGZhy{}time\PYGZhy{}limit 180 \PYGZhy{}\PYGZhy{}no\PYGZhy{}teardown \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}\PYGZhy{}topology line \PYGZhy{}\PYGZhy{}network\PYGZhy{}delay 0.5 \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}\PYGZhy{}nemesis\PYGZhy{}duration 30 \PYGZhy{}\PYGZhy{}network\PYGZhy{}delay\PYGZhy{}distribution constant
+\end{Verbatim}

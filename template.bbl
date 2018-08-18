@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{sonicpi}
+{Aaron, Sam}.
+\newblock Sonic pi - the live coding music synth for everyone, 2013.
+\newblock [Online; accessed 18-August-2018].
+
 \bibitem{attiya2004distributed}
 Hagit Attiya and Jennifer Welch.
 \newblock {\em Distributed computing: fundamentals, simulations, and advanced
@@ -11,6 +16,11 @@ Aggelos Bletsas.
 \newblock Evaluation of kalman filtering for network time keeping.
 \newblock {\em ieee transactions on ultrasonics, ferroelectrics, and frequency
   control}, 52(9):1452--1460, 2005.
+
+\bibitem{lnxstudio}
+{Cosgrove, Neil}.
+\newblock Lnx studio, 2016.
+\newblock [Online; accessed 18-August-2018].
 
 \bibitem{geng2018}
 Yilong Geng, Shiyu Liu, Zi~Yin, Ashish Naik, Balaji Prabhakar, Mendel
@@ -32,11 +42,28 @@ Waldo Greeff.
   performance during a simulated delay scenario}.
 \newblock PhD thesis, University of Pretoria, 2016.
 
+\bibitem{monotonic}
+{Habets, Thomas}.
+\newblock gettimeofday() should never be used to measure time, 2010.
+\newblock [Online; accessed 17-August-2018].
+
+\bibitem{hemminger2005network}
+Stephen Hemminger et~al.
+\newblock Network emulation with netem.
+\newblock In {\em Linux conf au}, pages 18--23, 2005.
+
 \bibitem{jepsen}
 {Kingsbury, Kyle}.
 \newblock Jepsen - a framework for distributed systems verification, with fault
   injection, 2018.
 \newblock [Online; accessed 6-August-2018].
+
+\bibitem{kulkarni2014logical}
+Sandeep~S Kulkarni, Murat Demirbas, Deepak Madappa, Bharadwaj Avva, and Marcelo
+  Leone.
+\newblock Logical physical clocks.
+\newblock In {\em International Conference on Principles of Distributed
+  Systems}, pages 17--32. Springer, 2014.
 
 \bibitem{lester2007effects}
 Michael Lester and Jon Boley.
@@ -64,6 +91,11 @@ Reid Oda and Rebecca Fiebrink.
   for Musical Expression}, volume~16 of {\em 2220-4806}, pages 26--31,
   Brisbane, Australia, 2016. Queensland Conservatorium Griffith University.
 
+\bibitem{cockroach}
+{Poss, Raphael}.
+\newblock Diy jepsen testing cockroachdb, 2016.
+\newblock [Online; accessed 17-August-2018].
+
 \bibitem{trueman2007laptop}
 Dan Trueman.
 \newblock Why a laptop orchestra?
@@ -74,9 +106,23 @@ Werner Vogels.
 \newblock Eventually consistent.
 \newblock {\em Communications of the ACM}, 52(1):40--44, 2009.
 
+\bibitem{wang2014improving}
+Pu~Wang and Ian~F Akyildiz.
+\newblock Improving network connectivity in the presence of heavy-tailed
+  interference.
+\newblock {\em IEEE Transactions on Wireless Communications},
+  13(10):5427--5439, 2014.
+
 \bibitem{wright2005open}
 Matthew Wright.
 \newblock Open sound control: an enabling technology for musical networking.
 \newblock {\em Organised Sound}, 10(3):193--200, 2005.
+
+\bibitem{zhang2008delay}
+Ying~Jun Zhang, Soung~Chang Liew, and Da~Rui Chen.
+\newblock Delay analysis for wireless local area networks with multipacket
+  reception under finite load.
+\newblock In {\em Global Telecommunications Conference, 2008. IEEE GLOBECOM
+  2008. IEEE}, pages 1--6. IEEE, 2008.
 
 \end{thebibliography}

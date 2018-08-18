@@ -4,6 +4,7 @@
 \usepackage{pdfpages}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
+\usepackage{minted}
 \usepackage[noend]{algpseudocode}
 
 \emergencystretch=5mm
@@ -429,23 +430,23 @@ when a new peer is discovered, and then at 30 second intervals thereafter.
 %  \caption{Link clock synchronization}\label{linktest}
 %\begin{algorithmic}[1]
 
-  staleMessageThreshold = 50ms
-  measurementCount = 100
-  inFlight = 5
-
-  on discovery of new peer j
-    send msg ping j
-
-  recv_j_ pong
-    if not (pong.RemoteHostTime - currentHostTime) >  staleMessageThreshold
-      reject
-
-    while(sizeof(data) < measurementCount)
-      if inFlight < inFlightLimit
-      send msg pong_i_
-
-  recv_i_ ping
-    send <Host, GHost, pong>
+%  staleMessageThreshold = 50ms
+%  measurementCount = 100
+%  inFlight = 5
+%
+%  on discovery of new peer j
+%    send msg ping j
+%
+%  recv_j_ pong
+%    if not (pong.RemoteHostTime - currentHostTime) >  staleMessageThreshold
+%      reject
+%
+%    while(sizeof(data) < measurementCount)
+%      if inFlight < inFlightLimit
+%      send msg pong_i_
+%
+%  recv_i_ ping
+%    send <Host, GHost, pong>
 
 % \Procedure{TestProcedure}{}
 % \State $\textit{stringlen} \gets \text{length of }\textit{string}$
@@ -517,9 +518,8 @@ update can be propagated.
 \end{itemize}
 
 Another test condition concerns the performance of the protocol under small,
-constant network delays. In the tests below this is defined as 50ms delays,
-which for clock synchronization messages results in a round trip time delta of
-+100ms.
+constant network delays. In the tests below this is defined as 48ms delays on
+all nodes except the leader for reasons outlined below.
 
 Finally the protocol is exercised in the presence of larger delays (500ms - 1s
 RTT). The timings for these are included on the charts below.
@@ -548,17 +548,159 @@ Line, 500ms delay
 
 \section{Analysis}
 
+\subsection{Musical Consistency}
+
 Resilient to different network conditions. Usually converges. Musical consistency has linear? falloff.
 
 Talk about indeterminate divergence (missed statuses). Difficulty of measurements from a library with no configuration and little in the way of callbacks.
 
 \subsection{Effects of delay distributions on clock synchronization}
 
-Delay distributions and Kalman filtering - surprising results. Expected clock sync to track delays but apparently not.
+In order to simulate network delays of various types the Jepsen framework uses
+the NetEm (network emulation) module as part of the Traffic Control package on
+Linux\cite{hemminger2005network}. This allows for outgoing packets from a node
+to be delayed by a given amount, according to different statistical
+distributions.
 
-Bandwidth measurements - difficult for partitions - maybe set partitions up first to see
+\begin{itemize}
+  \item constant - each packet is delayed by a fixed amount
+  \item normal - packets are delayed by a Gaussian distribution centred on the given time
+  \item pareto - given time parameter defines the duration over which a long tail distribution is calculated.
+\end{itemize}
 
-\subsection{Identifying and triggering invalid states}
+Of these, the pareto distribution is the most similar to the self-similar
+"heavy tail" delays found in real-world WiFi
+networks\cite{bletsas2005evaluation}\cite{zhang2008delay}, however the constant
+and normal distributions are useful indicators for other types of network
+conditions. For example, in \cite{wang2014improving} delays to secondary users
+caused by interference (contention) are linear with respect to their distance
+from the access point.  More constant delays are therefore useful to indicate
+the performance of Ableton Link for the lower bounds of latency under these
+kinds of conditions.
+
+The Ableton Link library code contains an undocumented upper limit on clock
+synchronization round trip times: Any measurement which takes longer than 50ms
+will be rejected and retried. If more than 5 measurement packets (again, an
+undocumented limit) are "in flight" during the run of measurements, the run
+will be cancelled for that round. The process will then wait for the next 30
+second interval to pass before attempting to synchronize again.
+
+This means that any sustained period of delays above 50ms will result in
+synchronization measurements not being taken. This can be seen in the results
+above, for the 500ms delay condition - no synchronization events occur in the
+grey shaded areas which represent the network conditions being applied.
+
+\subsection{Symmetric and asymmetric delays}
+
+For delays below the 50ms RTT threshold, clock synchronization events will
+still take place, however the clock synchronization algorithm does not reflect
+the presence of delays in cases where both the forward path (leader) and
+the reverse path (peer) have delays to their outbound packets. This is because
+a symmetric delay will centre around a measurement of zero (or the original
+offset as if no delay were present).
+
+% do a test run showing constant offset on peers with leader having offset switched between 0 and 25ms
+
+Aside from being a source of confusion during early investigation, this is
+actually a desirable condition in Ableton Link; The point at which peers are
+judged to be synchronized is their "time at speaker" and given that the local
+computation related to timestamping events does not require network calls then
+any offset introduced by network latency should (ideally) not be taken into
+account.
+
+Introducing an asymmetric delay in the tests on all peers except the leader
+causes synchronization events to be offset by half of the given delay time. In
+the examples above this is typically around 25ms negative offset for the 50ms
+one-way delay. Placing the asymmetric delay on the leader only causes the
+offset to "flip" to a 25ms positive offset.
+
+\subsection{Bandwidth usage and message complexity}
+
+Using the logging features of the iptables program, the number of packets
+sent between nodes during a test run is shown as follows:
+
+% \begin{tabular}
+%  \hline
+%  \multicolumn{6}{|c|}{Packet count/Bandwidth} \\
+%  \hline
+%  from/to &  n1 (leader) & n2 & n3 & n4 & n5\\
+%  \hline
+%  n1 & "-/-" & 1829/236K & 1823/235K & 1822/235K & 1826/236K\\
+%  n2 &1826/225K & "-/-" & 1502/203K & 1498/202K & 1504/203K\\
+%  n3 &1818/224K & 1500/203K & "-/-" & 1492/201K & 1498/202K\\
+%  n4 &1814/224K & 1493/202K & 1489/201K & "-/-" & 1491/201K\\
+%  n5 &1816/224K & 1497/202K & 1493/202K & 1488/201K & "-/-"
+%  \hline
+% \end{tabular}
+
+Here we see that the leader (n1) handles roughly 17.5\% more than the other
+peers in the connected case with no delays applied. This is because the Ableton
+Link library will prefer a connection to the leader during a clock
+synchronization event. If the leader is not accessible from the peer, the next
+neighbouring peer ordered by ID is chosen.
+
+This does raise a theoretical concern with regards to scalability as the leader
+handles proportionally more traffic however in practice the group is unlikely
+to reach a size required to cause stability issues in a local network.
+
+Comments in the codebase indicate that future work to choose a synchronization
+peer based on the local topology are being considered.
+
+\subsection{Resilience during periods of packet loss}
+
+The design of Ableton Link opts for UDP messaging throughout. Somewhat
+surprisingly for a system without a reliable messaging layer like TCP, the Link
+protocol maintains musical consistency under conditions of heavy packet loss.
+This may be in part due to the high level of redundancy in broadcasting updates
+- each node will re-broadcast the relevant state changes after receiving a
+"newer" event containing a change to the local state. In addition, each node
+will broadcast state at 5 second intervals. At the expense of some bandwidth,
+this approach does appear to have merit when looking at the results of the tests.
+
+\subsection{Comments on mutable timelines and temporary divergence}
+
+A number of applications that rely on timing do so using the system clock.
+While this is relegated to being an implementation detail in the literature,
+there is a growing agreement in the software engineering community that using
+the system clock is an unreliable source for measuring elapsed time, in part
+due to it's mutability. This has been the source of a number of major software
+outages and failures\cite{monotonic}.
+
+A proposed method which offers a reliable alternative for measuring elapsed
+time is the use of monotonic clocks. This are based on a monotonically
+increasing counter and have the desirable property that they will never be
+adjusted backwards or run at an artificially fast or slow rate, unlike system
+clocks under the control of NTP or similar synchronization methods.
+
+Monotonic clocks are used by Ableton Link\cite{goltz2018ableton} to avoid such
+issues. This is important because the ordering of events and the election of a
+leader in a session are determined using timestamps. Using a mutable source of
+timestamps such as the system clock would affect the ability of the system to
+maintain correct ordering.
+
+In addition to peers maintaining their own monotonic clock timestamp, the clock
+synchronization process determines additional offsets (deltas) relative to the
+leader of the session. Unlike the monotonic counter however, these offsets are
+necessarily mutable and can have the effect of moving a node "back in time"
+relative to another peer.
+
+(TODO state example here)
+
+Normally this would pose a major issue to the consistency of the protocol,
+however eventually consistency is usually restored as state is broadcast at
+regular 5 second intervals (effectively rounds) and on subsequent state
+updates. This means that the agreement on tempo among the session is unlikely
+to diverge for more than 5 seconds.
+
+Even so, this inter-round divergence is an area that would need attention if
+this protocol were to be adapted to environments with more strict requirements
+e.g. factory automation.
+
+At the expense of an increase in message size, a potential solution to this
+issue is offered by Hybrid Logical Clocks\cite{kulkarni2014logical} proposed by
+Kulkarni et al.
+
+(TODO Restate the tempo update algo with HLC involved.)
 
 Ping/pong measurement has hardcoded cap of 50ms for RTT
 Assuming RTT / 2 for latency calculation, this allows for max deviation of +/-25ms either side of leader
@@ -583,36 +725,276 @@ all neighbours behave the same, therefore 120 will be accepted and converged on 
 If recv msgA is dropped/lost when received by Node C, then Node C will be tempo
 = 140. If Node C retransmits with it's own beat origin (arbitrarily higher) then an inconsistent state is reached.
 
-
 \section{Further work}
 
-Generalize the work to other solutions.
+The testing of distributed systems techniques applied to musical
+synchronization would primarily benefit from more systems to test against!
+Using the measures and techniques offered in this work it is hoped that an
+objective comparison with future libraries may be made.
 
-Create CI testing for the Link library.
+Returning focus to Ableton Link, the testing approach may form the basis of
+some usable integration testing. In particular the use of containers (and
+Jepsen) to provide a reproducible testing environment is being adopted as part
+of a development workflow by several distributed systems such as Cockroach
+DB\cite{cockroach}. Combining this testing approach with the method of
+recording audio from each peer would allow for more objective measurements to
+be made with regard to clock synchronization.
 
-Suggest improvements to Link - Google nanosecond precision paper. Potential
-uncertainty window around synchronization events. Configuration/visibility of
-session information.
-
-Integration into Sonic Pi. Windows compatibility.
+Given the opportunity, it would be interesting to examine alternative
+techniques for clock synchronization that better accommodate asymmetric delays
+and also that take account of the network topology. One example would be the
+use of "coded probes" suggested by Geng et al\cite{geng2018} - by sending
+timing packets from server \textit{i} to \textit{j} in pairs with a known delay
+\textit{s} between them, on being received at server \textit{j} and the
+interval can reflect the presence of delays in transmission. As delays are
+often random in nature, the intervals closest to \textit{s} can be used to
+increase accuracy.
 
 \section{Conclusions}
+
+From the analysis performed in this work and anecdotally working with Link on
+other software projects I have found it to be an elegant, well designed and
+well implemented solution to an interesting set of problems. Studying clock
+synchronization in the context of musical applications offers a practical
+introduction to the wider field, without the additional requirements in
+expertise that often come with analysing in the context of data storage
+systems.
+
+Link has been shown to maintain a reasonable degree of consistency under
+adverse network conditions. This work has noted the impact of asymmetric delays
+under various distributions on the clock synchronization algorithms in use by
+Link. Bandwidth usage has been analysed and found to be higher on the leader in
+connected topologies, although data transfer in absolute terms is relatively
+low.
+
+It is also proposed that the presence of a non-monotonic clock offset may
+introduce inconsistencies within rounds, however the regular retransmission of
+current state means that the session will converge eventually provided there
+are no permanent network partitions.
 
 \bibliographystyle{plain}
 \bibliography{bibliography}
 
 \appendix
 \section{Self assessment}
+
+The focus of this work was distilled over time, however the original impetus
+was related to my work on the open source music software Sonic
+Pi\cite{sonicpi}. From an initial desire to add collaboration features to the
+software I began to explore the problem space. Private correspondence with Sam
+Aaron was useful in identifying the separate issues of co-located and
+geo-distributed performance.
+
+With a view to implementing a custom solution to the co-located problem
+specifically, I began some preliminary designs. During this time I was
+introduced to the Ableton Link library which articulated many of the ideas I
+had already been considering albeit with greater clarity and focus. As I began
+to investigate the Link library I became convinced that it was a well thought
+out solution to the co-located problem.
+
+This led to preliminary work with the Link C++ library and as part of this
+project I began work on integrating this with the Ruby programming language
+(see code listings). Ruby was chosen as this is the primary development
+language for Sonic Pi and the creation of a wrapper should be of use in future
+integration work.
+
+Many more hours were then spent working out how to
+instrument the Link codebase to allow for testing. With very few configuration
+options, the only option became to enable and parse the debug logs for
+information regarding clock synchronization events. These were largely
+undocumented meaning that considerable time was spent on this stage in
+understanding the output.
+
+With the C++ wrapper written, work moved on to setting up the tests in Jepsen.
+This was aided by generally excellent documentation on the Jepsen project
+however the existing examples assumed the use of database client libraries
+which meant that working out how to handle more simple connection methods was a
+little more opaque.
+
+Jepsen is written in Clojure which meant working in three quite different
+languages to produce this work (the others being C++ and Ruby). This was the
+source of some cognitive overhead which on reflection was not ideal, but given
+the choice again I would still work with the same libraries to do this kind of
+testing.
+
+It is with some regret that only a single library was under test in this work,
+however after examining various solutions in the same space none of these were
+suitable for various reasons. These included reliance on a single operating
+system (OS X in the case of Landini\cite{narveson2013landini}), or the need for
+graphical interfaces in the case of LNX Studio\cite{lnxstudio}.
+
+The final, and most significant, stage was spent in producing readable output
+from which to derive results. Initial inspiration was taken from the existing
+GNU Plot figures that are included with Jepsen to chart network performance,
+however all the code to produce the examples in figures here had to be written
+from scratch.
+
+When dealing with parsing any text format, issues occur around the quality of
+the data. As a result the code contains a lot of incidental complexity which
+reflects the fact that the debug logs weren't written with instrumentation in
+mind.
+
+Finally while initial drafts of the work focused on variations in topology and
+delay, following advice from my supervisor I took the time to investigate
+different distributions of delays. This also highlighted to me the surprising
+(to me, at least) behaviour of the clock synchronization under symmetric
+delays. This meant that further work on the tests was required to ensure that a
+consistent leader was chosen for each test run and that delays were only
+applied to outbound packets on other nodes.
+
+While the results presented here are not groundbreaking, I do hope that by
+offering a practical set of criteria and test bed that it will aid further
+research in this area. Thorough analysis of any distributed system is a
+difficult task and I have learnt a great deal about this process as a result.
+
 \section{Running the tests}
-\section{Configuring Jepsen to support other systems and tests}
+
+\begin{minted}{bash}
+# clone project and note the path
+git clone https://github.com/xavriley/jepsen-ableton-link.git
+
+# clone the Jepsen project to another folder
+git clone https://github.com/jepsen-io/jepsen.git#0.1.9
+cd jepsen/docker
+export JEPSEN_ROOT="/path/to/jepsen.link" # as noted above
+./up.sh --dev
+
+# in another window
+docker exec -it jepsen-control bash
+# once the container has booted
+lein run test --time-limit 180 --no-teardown \
+--topology line --network-delay 0.5 \
+--nemesis-duration 30 --network-delay-distribution constant
+\end{minted}
+
+Once that has completed, run the following in the root of the jepsen.link
+project:
+
+\begin{minted}{bash}
+ruby tempo-grapher.rb
+\end{minted}
+
+This will generate the graphs in
+
+\begin{minted}{bash}
+./figures_for_publication/_name_of_autogenerated_test_output_directory_/plot.pdf
+\end{minted}
+
+following each test run.
+
 \section{Code listings}
+
+The following sections outline the code written in support of this work.
+
+\subsection{\texttt{ruby\char`_ableton\char`_link} gem}
+
+The code is available at
+\texttt{https://github.com/xavriley/ruby\char`_ableton\char`_link}.
+
+The majority of interest is contained in the
+\texttt{\detokenize{ext/ableton_link/ableton_link.cpp}} file. This contains the
+wrapper code for the Ableton Link C++ library.
+
+The wrapper is implemented using the Rice project which provides convenience
+functions for interoperability between C++ and Ruby codebases:
+\texttt{\detokenize{https://github.com/jasonroelofs/rice}}
+
+The file used for the test procedure is \texttt{bin/server} which contains a
+simple TCP server to receive messages containing tempo information while
+printing the status of the session on each beat.
+
+\subsection{\texttt{jepsen.link}}
+
+The code is available at
+\texttt{https://github.com/xavriley/jepsen-ableton-link}.
+
+This is a Clojure project, using the Jepsen framework. All code relating to the
+testing is contained in the \texttt{src/jepsen/link.clj} file.
+
+To produce the graphs the \texttt{tempo-grapher.rb} file is used. This code is
+all related to the parsing of log files and the production of a
+\texttt{gnuplot} command. The data produced by the parsing is saved to files
+and copied to the output directory in case further analysis is required.
+
 \section{Professional issues}
+
+When assessing software solutions for synchronizing musical time, it is
+admirable that Ableton Link attempts to do so using permissive licensing and a
+committment to cross platform support. In doing so they allow for the
+possibility that freely available software may be used for music production
+without onerous requirements on the user to learn a particular programming
+language or maintain a specific environment in order to be productive. I would
+hope that this has a democratizing effect on the landscape for music
+production, particularly with regard to some of the academic software output in
+this field. These shared projects, while excellent in many respects, often have
+a high barrier to entry that musicians with a lack of appropriate resources
+would struggle to overcome.
+
+Without more effort on the part of publically funded institutions to target a
+non-academic userbase, the danger is for a tendency toward an implicit elitism
+in their outputs. Software and music is then written for, as received by,
+audiences from within the institutions without regard to how the public life of
+the wider communities can be enriched.
+
+With a void of accessible, open source (OSS) alternatives the space is left for
+private companies and individuals to "productize" the work done in academia,
+with high costs for the end user. Music forms a hobby (in many cases a passion)
+among a large percentage of the population - indeed a \textit{dislike} of music
+is so rare that it is deemed a medical condition - textit{musical anhedonia} -
+affecting around 3-5\char`% of the population. Within the rest of the
+population exist a large group who invest a great deal of time and energy into
+music production. Given the dominance of the private market in digital music
+software, this often entails a financial investment too and a dependence on
+expensive tools.
+
+Instead of using a passion for digital music making in a constructive way,
+proprietary software has no incentive to educate the end user beyond making
+them comfortable with their proprietary interface. Music has offered a
+gateway into computer science for many current practioners (annecdotally, the
+creator of Clojure Rich Hickey started as a music graduate programming
+applications for the Atari ST) - if the programming opportunities are not
+provided then it's possible that a generation of potential programmers will
+miss out on these opportunities.
+
+To this end, open source projects like Sonic Pi\cite{sonicpi} are aiming to
+bridge this gap by targetting school children alongside professional users. It
+does so by packaging the work of other OSS projects such as SuperCollider, Qt,
+QScintilla and the Ruby programming language into a cross-platform environment
+with a wide reach and a large userbase. My own contributions to that project
+have been with the aim of making new tools of expression more freely available
+to those with an interest in creating.
+
+This is where the model of Ableton Link, despite being written by a proprietary
+software company, is forward looking in the creation of an open standard to
+solve the issue of synchronization.
+
 \section{Acknowledgements}
 
-Open source code
-Colleagues at Heroku
-Salesforce for funding
-Gregory and staff at RHUL
-Em
+I would like to record my thanks to a number of groups and individuals, without
+whom this work would not have been possible.
+
+Firstly, to the open source community and in particular the Ruby and Clojure
+projects and practicioners I have interacted with. These opportunities have
+enriched my career immeasurably. In particular I'd like to thank Sam Aaron for
+his insightful comments, stimulating discussions and boundless energy in
+working on Sonic Pi, along with the other contributors.
+
+It's also fitting that the Kyle Kingsbury's work on the Jepsen project first
+piqued my interest in distributed systems, so I'm pleased and proud to have
+been able to continue that in the presented work. Honourable mentions also go
+to Ableton for developing Link and doing such a good job of it, along with
+gnuplot and vimlatex for making the test results look half decent.
+
+My thanks also to my work colleagues at Heroku for supporting me during a
+part-time pursuit of a Masters degree and to Salesforce for the generous
+funding policy.
+
+To Gregory and the teaching staff at RHUL, I'm forever grateful that I was
+given the opportunity to study with you and I've found it rewarding and
+challenging in the best possible way.
+
+Finally, to my friend David Bamber for introducing me to the idea that
+programming was for me, to my family for unerring support and to my wife Em who
+has been consistent, persistent and fault tolerant throughout.
 
 \end{document}

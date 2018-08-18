@@ -13,14 +13,19 @@
 \contentsline {subsection}{\numberline {3.4}Topologies and latencies}{8}
 \contentsline {section}{\numberline {4}Experimental results}{8}
 \contentsline {section}{\numberline {5}Analysis}{18}
-\contentsline {subsection}{\numberline {5.1}Effects of delay distributions on clock synchronization}{18}
-\contentsline {subsection}{\numberline {5.2}Identifying and triggering invalid states}{18}
-\contentsline {section}{\numberline {6}Further work}{18}
-\contentsline {section}{\numberline {7}Conclusions}{19}
-\contentsline {section}{References}{19}
-\contentsline {section}{\numberline {A}Self assessment}{20}
-\contentsline {section}{\numberline {B}Running the tests}{20}
-\contentsline {section}{\numberline {C}Configuring Jepsen to support other systems and tests}{20}
-\contentsline {section}{\numberline {D}Code listings}{20}
-\contentsline {section}{\numberline {E}Professional issues}{20}
-\contentsline {section}{\numberline {F}Acknowledgements}{20}
+\contentsline {subsection}{\numberline {5.1}Musical Consistency}{18}
+\contentsline {subsection}{\numberline {5.2}Effects of delay distributions on clock synchronization}{18}
+\contentsline {subsection}{\numberline {5.3}Symmetric and asymmetric delays}{19}
+\contentsline {subsection}{\numberline {5.4}Bandwidth usage and message complexity}{19}
+\contentsline {subsection}{\numberline {5.5}Resilience during periods of packet loss}{20}
+\contentsline {subsection}{\numberline {5.6}Comments on mutable timelines and temporary divergence}{20}
+\contentsline {section}{\numberline {6}Further work}{21}
+\contentsline {section}{\numberline {7}Conclusions}{22}
+\contentsline {section}{References}{22}
+\contentsline {section}{\numberline {A}Self assessment}{24}
+\contentsline {section}{\numberline {B}Running the tests}{26}
+\contentsline {section}{\numberline {C}Code listings}{26}
+\contentsline {subsection}{\numberline {C.1}\texttt {ruby\char `_ableton\char `_link} gem}{27}
+\contentsline {subsection}{\numberline {C.2}\texttt {jepsen.link}}{27}
+\contentsline {section}{\numberline {D}Professional issues}{27}
+\contentsline {section}{\numberline {E}Acknowledgements}{28}
