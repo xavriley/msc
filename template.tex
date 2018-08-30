@@ -114,98 +114,45 @@
 
 \section{Introduction}
 
-% this intro feels like a lot of statements without citations
-% but maintaining a flow is difficult
-
 The synchronizing of events is fundamental to our perception of musical
 performance. Where performers are using networked connected devices, the
 challenge maintaining accurate synchronization incorporates the well studied
 problem of clock synchronization from distributed systems.
 
-As network technologies continue to grow in usage and importance to musical
-performances\cite{madgwick2015simple}, it becomes increasingly important to
-find common approaches to allow devices and applications to synchronize, without
-reliance on expensive proprietary technology or protocols which are difficult to
-implement and configure. The need to purchase or to understand such equipment
-creates an unnecessary barrier to entry, potentially impeding important
-contributions from musicians who lack the necessary financial or educational
-resources.
+This work examines the Ableton Link\cite{goltz2018ableton} protocol, which
+appears to be one of the first attempts at applying concepts from distributed
+computing to the problem of musical synchrony. Through empirical testing it is
+shown to maintain a reasonable degree of consistency under adverse network
+conditions. This work also examines the impact of asymmetric network delays on
+the clock synchronization algorithms in use by the protocol. Bandwidth usage is
+also analysed and found to be higher on the leader in connected topologies,
+although data transfer in absolute terms is relatively low.
 
-Music programming environments in the academic space are well catered for with
-regards to open source software, however applications in the consumer market
-have tended to lag behind some of these advances. Often either the production
-of music is limited to a single device, or additional devices are synchronized
-using specialized hardware dedicated to synchronizing frames e.g. MIDI, SMTPE -
-see Goltz\cite{goltz2018ableton} for a review of these methods.
+It is also proposed that the presence of a non-monotonic clock offset may
+introduce inconsistencies within rounds, however the regular retransmission of
+state means that the session will converge eventually provided there are no
+permanent network partitions.
 
-\subsection{Co-located vs. Geo-distributed}
+This project has allowed me to develop practical skills in the area of testing
+distributed network protocols. It is my hope that this proves to be useful in
+my future professional work with distributed systems more generally. The
+frameworks (Jepsen\cite{jepsen} in particular), methodologies and background
+research have all informed my outlook so far and I will continue to investigate
+some of the related areas after this project is finished.
 
-When considering the synchronization of musical programs and important
-distinction is whether the participants are "within earshot" of each other. If
-performers are distributed across a large geographic distance, such that they
-could not reasonable hear the audible output of their peers, then staying
-within the thresholds of tolerable latency starts to become impossible. This
-means that performers cannot react to each other in a typical way due to the
-effect of lag.
+\section{Project goals and methodology}
 
-The position taken in this work is that geo-distributed performance is more a
-matter of maintaining a locally consistent ordering of events and relative
-timings rather than accurate synchronization, and as such is not under the
-scope of discussion here.
+The aim of this project is to establish a set of criteria to evaluate
+distributed solutions to the problem of musical synchronization. Using these
+criteria as a benchmark, we then evaluate whether a specific solution is viable
+for reliable music production and performance. The benefits of such a system
+are evident (robust to node failures/dropouts, simplified set up) - this work
+instead aims to examine some of the potential pitfalls when running such a
+system under conditions that simulate commodity network hardware.
 
-Other works have taken a different view, attempting to offer creative solutions
-to overcome the inherent latency with wide-area communication. In
-Oda\cite{oda2017tools} these include the use of GPS timing to provide a
-globally consistent time server, along with predictive instruments that attempt
-to send messages to remote clients to synthesize a performer's actions ahead of
-time in order to overcome latency. While interesting, in their current state
-these are unlikely to be generalizable to consumer software.
-
-Focusing on co-located performance, the prime objective becomes to achieve and
-maintain synchrony between devices. Secondary concerns include maximum
-convergence time on any relevant notions of shared state, e.g. tempo,
-start/stop times.
-
-\subsection{About Ableton Link}
-
-Ableton Link aims to address some of these issues by supplying an open source,
-permissively licensed C++ library for integration with application code. As
-well as the popular digital audio workstation Ableton Live, implementations
-exist for a large number of mobile applications and for many of the popular
-music programming environments. In addition the following three design goals are
-stated\cite{goltz2018ableton}:
-
-\begin{itemize}
-  \item Remove the restrictions of a typical master/client system
-  \item Remove the requirement for initial setup
-  \item Scale to a wide variety of music applications
-\end{itemize}
-
-It differs from existing approaches in that it does not rely on a master
-process to propagate timing information directly. Instead nodes will establish
-a session, using a reference to the start time of the oldest member of the
-group even if that member is no longer present.
-
-Clock synchronization is performed using a Kalman
-filter which adds a level of robustness to jitter
-introduced by the network along with a more accurate reflection of the real
-delay under certain conditions. This approach appears to be relatively
-sophisticated when compared with other music programs using basic averaging
-algorithms such as NTP\cite{bletsas2005evaluation}.
-
-Implementation is handled by application developers who are left to integrate a
-small API. C++ has widespread support for integration with many popular
-languages, making this viable for the majority of existing applications.
-
-Setup for the end user is virtually transparent - network discovery takes place
-automatically on all interfaces. Clock synchronization is performed
-automatically for nodes joining a session and then at 30 second intervals
-afterwards. Simple transport commands (start, stop) and tempo changes are also
-propagated automatically by reliable broadcast.
-
-Failures, drop outs and re-entry are all handled with a model of eventual
-consistency where last-write-wins takes effect for changes in tempo and
-transport state.
+In examining a single system, Ableton Link, it is hoped that the criteria and
+testing methodology will prove useful for future research into alternative
+distributed solutions.
 
 \subsection{Evaluating synchronization for music systems}
 
@@ -237,17 +184,101 @@ covers some of the key criteria for success:
 
 \section{Background research}
 
+As network technologies continue to grow in usage and importance to musical
+performances\cite{madgwick2015simple}, it becomes increasingly important to
+find common approaches to allow devices and applications to synchronize, without
+reliance on expensive proprietary technology or protocols which are difficult to
+implement and configure. The need to purchase or to understand such equipment
+creates an unnecessary barrier to entry, potentially impeding important
+contributions from musicians who lack the necessary financial or educational
+resources.
+
+\subsection{About Ableton Link}
+
+Ableton Link is an open source, permissively licensed C++ library for
+integration with application code. As well as the popular digital audio
+workstation Ableton Live, implementations exist for a large number of mobile
+applications and for many of the popular music programming environments. In
+addition the following three design goals are stated\cite{goltz2018ableton}:
+
+\begin{itemize}
+  \item Remove the restrictions of a typical master/client system
+  \item Remove the requirement for initial setup
+  \item Scale to a wide variety of music applications
+\end{itemize}
+
+It differs from existing approaches in that it does not rely on a master
+process to propagate timing information directly. Instead nodes will establish
+a session, using a reference to the start time of the oldest member of the
+group even if that member is no longer present.
+
+Clock synchronization is performed using a Kalman filter which adds a level of
+robustness to jitter introduced by network delays, along with a more accurate
+reflection of the real delay under certain conditions. This approach appears to
+be relatively sophisticated when compared with other music programs using basic
+averaging algorithms such as NTP\cite{bletsas2005evaluation}.
+
+Implementation is handled by application developers who are left to integrate a
+small API. C++ has widespread support for integration with many popular
+languages, making this viable for the majority of existing applications.
+
+Setup for the end user is virtually transparent - network discovery takes place
+automatically on all interfaces. Clock synchronization is performed
+automatically for nodes joining a session and then at 30 second intervals
+afterwards. Simple transport commands (start, stop) and tempo changes are also
+propagated automatically by reliable broadcast.
+
+Failures, drop outs and re-entry are all handled with a model of eventual
+consistency where last-write-wins takes effect for changes in tempo and
+transport state.
+
+\subsection{Alternative software solutions}
+
+Music programming environments in the academic space are well catered for with
+regards to open source software, however applications in the consumer market
+have tended to lag behind some of these advances. Often either the production
+of music is limited to a single device, or additional devices are synchronized
+using specialized hardware dedicated to synchronizing frames e.g. MIDI, SMTPE -
+see Goltz\cite{goltz2018ableton} for a review of these methods.
+
 The use of networks in computer music is an active area of study, with much of
 the research being driven by "laptop orchestras"\cite{trueman2007laptop}
-centred around academic institutions. This has led to approaches centring
-around the Open Sound Control
+centred around academic institutions. This has led to widespread adoption of
+the Open Sound Control
 protocol\cite{wright2005open}\cite{madgwick2015simple}\cite{narveson2013landini}
-as the "lingua franca" of connected musical applications, although older
-methods include the use of MIDI, SMPTE and other standards (see \cite{goltz2018ableton}).
+as the "lingua franca" of connected musical applications.
 
 Ableton Link uses a custom network protocol but all networking is handled via
 private methods within the library, meaning that application developers
 choosing to implement it do not need to concern themselves with network level code.
+
+\subsection{Co-located vs. Geo-distributed}
+
+When considering the synchronization of musical programs and important
+distinction is whether the participants are "within earshot" of each other. If
+performers are distributed across a large geographic distance, such that they
+could not reasonably hear the audible output of their peers, then staying
+within the thresholds of tolerable latency starts to become impossible. This
+means that performers cannot react to each other in a normal way due to the
+effect of lag.
+
+The position taken in this work is that geo-distributed performance is more a
+matter of maintaining a locally consistent ordering of events and relative
+timings rather than accurate synchronization, and as such is not under the
+scope of discussion here.
+
+Other works have taken a different view, attempting to offer creative solutions
+to overcome the inherent latency with wide-area communication. In
+Oda\cite{oda2017tools} these include the use of GPS timing to provide a
+globally consistent time server, along with predictive instruments that attempt
+to send messages to remote clients to synthesize a performer's actions ahead of
+time in order to overcome latency. While interesting, in their current state
+these are unlikely to be generalizable to consumer software.
+
+Focusing on co-located performance, the prime objective becomes to achieve and
+maintain synchrony between devices. Secondary concerns include maximum
+convergence time on any relevant notions of shared state, e.g. tempo,
+start/stop times.
 
 \subsection{Finding bounds - the limits of human perception}
 
@@ -302,12 +333,31 @@ subject to their own sources of latency. In addition, testing within a single
 machine in this way would not allow for detecting drift in the system clock,
 relative to real time, if additional reference time sources are not also used.
 
-\section{Criteria and design}
+\section{Evaluation Criteria and Experiment Design}
+
+The system will be judged by the following criteria:
+
+\begin{center}
+\begin{tabular}{|c|l|}
+ \hline
+  Musical consistency & convergence of nodes under tempo changes \\
+  \hline
+  Bandwidth & how many messages are required by the protocol \\
+  \hline
+  Network Topologies & performance under different network layouts \\
+  \hline
+  Delay distributions & effect of latency distributions on synchronization\\
+ \hline
+\end{tabular}
+\end{center}
+
+These are defined in more detail below.
 
 The testing approach taken in this work chooses not to measure the audio output
 but instead analyses the reported times from each of the application nodes for
-each beat at the current tempo.  This allows for simple reproduction of results
-and a more flexible way to test different failure modes and network conditions.
+each beat at the current tempo which should occur at the same time across all
+nodes. This approach allows for a simple reproduction of results and a more
+flexible way to test different failure modes and network conditions.
 
 This is achieved using the Jepsen framework\cite{jepsen}, which was
 originally designed to test safety guarantees under fault injection, however it
@@ -370,7 +420,7 @@ unnecessary complexity to the testing procedure.
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Consistency in a musical context}
+\subsection{Consistency in a musical context} \label{musicalConsistency}
 
 The introduction of faults and perturbations to the network can cause nodes to
 receive updates late, resulting in divergence for the beat markers in the
@@ -384,9 +434,35 @@ similar eventually consistent systems in future should measure "musical
 consistency" as the time spent in agreement relative to the length of the
 overall session.
 
-Another key metric would appear to be the duration for periods of divergence.
-If these can be minimized the resulting adverse impact on the musical
-performance can be limited.
+\begin{figure}
+  \caption{Example of divergent time measurements}
+  \centering
+  \includegraphics[width=0.75\textwidth]{figures-for-publication/musical-consistency-example.png}
+  \label{fig:divergence-example}
+\end{figure}
+
+In the accompanying results the periods of inconsistency are highlighted in
+pink. Figure \ref{fig:divergence-example} shows an example where a single node has
+received a tempo update before this could be propagated to the other peers,
+causing it to move early. Convergence following such an event is judged as the
+first read operation for which all nodes are present and within an error bound
+of 100ms.  This error bound is used as some degree of smoothing is necessary to
+counteract natural variance in the measurements being taken.
+
+The duration of these divergence periods is summed and divided by the total
+session time to give a percentage relative to the length of the session.
+
+\begin{figure}
+  \caption{Musical consistency calculation}
+  \centering
+  \begin{equation}\label{eqn:musical-consistency}
+    musical\;consistency=\frac{\sum divergence\;period\;durations}{session\;duration}
+  \end{equation}
+\end{figure}
+
+This could be viewed as a variant on Time-based staleness proposed by Bermbach
+et al \cite{bermbach2013towards} with a simplification to allow for an easier
+comparison between sessions of similar lengths.
 
 \subsection{Synchronization Accuracy versus Bandwidth}
 
@@ -407,58 +483,6 @@ for the figures set out in tolerable latency above.
 The synchronization protocol of Link is not documented, however from analysis
 of the codebase it can be seen that clock synchronization events take place
 when a new peer is discovered, and then at 30 second intervals thereafter.
-
-TODO: this algorithm
-
-\begin{algorithm}
-  \caption{Link clock synchronization}\label{linktiming}
-  \begin{algorithmic}[2]
-
-    \State $staleMessageThreshold \gets \textit{50ms}$
-    \State $measurementCount \gets \textit{100}$
-    \State $inFlightLimit \gets \textit{5}$
-
-    \Procedure{SyncProcedure}{}
-      \BState \emph{on discovery of new peer j}:
-      \BState \textit{send msg ping j}
-    \EndProcedure
-  \end{algorithmic}
-\end{algorithm}
-%  staleMessageThreshold = 50ms
-%  measurementCount = 100
-%  inFlight = 5
-%
-%  on discovery of new peer j
-%    send msg ping j
-%
-%  recv_i_ ping
-%    send <Host, GHost, pong>
-
-%  recv_i_ pong
-%    if not (pong.RemoteHostTime - currentHostTime) >  staleMessageThreshold
-%      reject
-%
-%    while(sizeof(data) < measurementCount)
-%      if inFlight < inFlightLimit
-%      send msg pong_i_
-%
-% \Procedure{TestProcedure}{}
-% \State $\textit{stringlen} \gets \text{length of }\textit{string}$
-% \State $i \gets \textit{patlen}$
-% \BState \emph{top}:
-% \If {$i > \textit{stringlen}$} \Return false
-% \EndIf
-% \State $j \gets \textit{patlen}$
-% \BState \emph{loop}:
-% \If {$\textit{string}(i) = \textit{path}(j)$}
-% \State $j \gets j-1$.
-% \State $i \gets i-1$.
-% \State \textbf{goto} \emph{loop}.
-% \State \textbf{close};
-% \EndIf
-% \State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
-% \State \textbf{goto} \emph{top}.
-% \EndProcedure
 
 This involves the sending of at least 50 outbound messages and receiving at
 least 50 inbound messages under the default settings (these are not
@@ -523,40 +547,34 @@ Finally, differing distributions of delays are examined as follows:
   \item Pareto distribution
 \end{itemize}
 
-\section{Experimental results}
-
-% no delays
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_98_644_network_delay_distribution_normal_topology_connected/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_96_212_network_delay_distribution_normal_topology_bridge/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_96_942_network_delay_distribution_normal_topology_line/plot.pdf}
-
-% 48ms delays
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_89_858_network_delay_distribution_constant_network_delay_0_048_topology_connected/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_91_571_network_delay_distribution_constant_network_delay_0_048_topology_bridge/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_90_385_network_delay_distribution_constant_network_delay_0_048_topology_line/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_89_17_network_delay_distribution_normal_network_delay_0_048_topology_connected/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_93_432_network_delay_distribution_normal_network_delay_0_048_topology_bridge/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_95_088_network_delay_distribution_normal_network_delay_0_048_topology_line/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_100_0_network_delay_distribution_pareto_network_delay_0_048_topology_connected/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_97_77_network_delay_distribution_pareto_network_delay_0_048_topology_bridge/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_97_833_network_delay_distribution_pareto_network_delay_0_048_topology_line/plot.pdf}
-
-% 500ms delays
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_91_538_network_delay_distribution_constant_network_delay_0_5_topology_connected/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_82_199_network_delay_distribution_constant_network_delay_0_5_topology_bridge/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_89_134_network_delay_distribution_constant_network_delay_0_5_topology_line/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_90_207_network_delay_distribution_normal_network_delay_0_5_topology_connected/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_84_946_network_delay_distribution_normal_network_delay_0_5_topology_bridge/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_90_48_network_delay_distribution_normal_network_delay_0_5_topology_line/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_97_062_network_delay_distribution_pareto_network_delay_0_5_topology_connected/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_94_346_network_delay_distribution_pareto_network_delay_0_5_topology_bridge/plot.pdf}
-\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_96_13_network_delay_distribution_pareto_network_delay_0_5_topology_line/plot.pdf}
-
 \section{Analysis}
+
+\subsection{Note on the visual formatting of results}
+
+The visual output from the tests contains a variety of information which will
+be described as follows. Appendix \ref{appendix:experimental-results} contains
+graphical plots of the results obtained during the test runs.
+
+Each page shows an single test run. The upper graph charts the current tempo (y
+axis) from each peer on each musical beat (equivalent to time, x axis). The
+lower chart shows the clock offset measurements from the leader of the group
+The lower chart shows the clock offset measurements from the leader of the
+group - the tests are constructed such that node \textit{n1} is always started
+first and is therefore the leader for the session. The offset measurements are
+then between \textit{n1} and each of the remaining 4 nodes \textit{n2, n3, n4}
+and \textit{n5}.
+
+The sections coloured grey represent the "nemesis" regions - these are the
+times during which the network conditions (topologies and latencies) are
+applied.
+
+The sections coloured in pink mark "divergence periods" as explained in section
+\ref{musicalConsistency}. These give an added visual indication for periods in
+which the nodes do not agree on the current tempo and/or beat timings.
 
 \subsection{Musical Consistency}
 
-The previous results are summarized in the following table:
+The results are summarized in the following table:
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
@@ -581,9 +599,10 @@ conditions. No test run observed any major divergence and musical consistency
 was generally good under the zero delay and pareto conditions.
 
 There was considerable difficulty in obtaining precise measurements given the
-lack of configuration very little in the way of callbacks, especially regarding
-clock synchronization. This may account for some of the variation, however the
-graphs reflect that for the most part, 5 nodes were maintaining synchrony.
+lack of configuration options and very little in the way of callbacks,
+especially regarding clock synchronization. This may account for some of the
+variation, however the graphs reflect that for the most part, 5 nodes were
+maintaining synchrony.
 
 \subsection{Effects of delay distributions on clock synchronization}
 
@@ -616,12 +635,20 @@ undocumented limit) are "in flight" during the run of measurements, the run
 will be cancelled for that round. The process will then wait for the next 30
 second interval to pass before attempting to synchronize again.
 
+
+\begin{figure}
+  \caption{Clock offset measurement failures}
+  \includegraphics[width=1\textwidth]{figures-for-publication/offset-measurement-failures.png}
+  \label{fig:offset-measurements-missed}
+\end{figure}
+
 This means that any sustained period of delays above 50ms will result in
-synchronization measurements not being taken. This can be seen in the results
-above, for the 500ms delay condition - no synchronization events occur in the
-grey shaded areas which represent the network conditions being applied.
-Exceptions to this may occur when the testing framework is not able to execute
-the traffic shaping command on a node at the start of a nemesis period.
+synchronization measurements not being taken. This can be seen in
+Figure ~\ref{fig:offset-measurements-missed} showing the 500ms delay condition - no
+synchronization events occur in the grey shaded areas which represent the delay
+conditions being applied. Exceptions to this occur in the results when the
+testing framework is not able to execute the traffic shaping command on a node
+at the start of a nemesis period.
 
 \subsection{Symmetric and asymmetric delays}
 
@@ -632,7 +659,11 @@ the reverse path (peer) have delays to their outbound packets. This is because
 a symmetric delay will centre around a measurement of zero (or the original
 offset as if no delay were present).
 
-% do a test run showing constant offset on peers with leader having offset switched between 0 and 25ms
+\begin{figure}
+  \caption{Clock offset under asymmetric delay}
+  \includegraphics[width=1\textwidth]{figures-for-publication/clock-offset-example.png}
+  \label{fig:delayExample}
+\end{figure}
 
 Aside from being a source of confusion during early investigation, this is
 actually a desirable condition in Ableton Link; The point at which peers are
@@ -644,11 +675,17 @@ account.
 Introducing an asymmetric delay in the tests on all peers except the leader
 causes synchronization events to be offset by half of the given delay time. In
 the examples above this is typically around 25ms negative offset for the 50ms
-one-way delay. Placing the asymmetric delay on the leader only causes the
-offset to "flip" to a 25ms positive offset. In the results this can be seen as
-a movement from the typically offset of between 5-7ms (it is suggested that
+one-way delay. This is illustrated in Figure \ref{fig:delayExample} where the delay
+condition (shaded grey on the graph) caused the offset measurements for nodes 4
+and 5 to move from around +8ms to around -16ms when the asymmetric delay is
+applied. Nodes 2 and 3 failed to complete their offset measurements in this
+case due to the 50ms timeout that the Link protocol imposes.
+
+Placing the asymmetric delay on the leader only causes the
+offset to "flip" to a 25ms positive offset. This would be seen as
+a movement from the typical offset of between 5-7ms (it is suggested that
 this is a result of processing overheads in the containers) to an offset of
-around -20ms.
+around +30ms.
 
 \subsection{Bandwidth usage and message complexity}
 
@@ -886,22 +923,40 @@ introduction to the wider field, without the additional requirements in
 expertise that often come with analysing in the context of data storage
 systems.
 
-Link has been shown to maintain a reasonable degree of consistency under
-adverse network conditions. This work has noted the impact of asymmetric delays
-under various distributions on the clock synchronization algorithms in use by
-Link. Bandwidth usage has been analysed and found to be higher on the leader in
-connected topologies, although data transfer in absolute terms is relatively
-low.
-
-It is also proposed that the presence of a non-monotonic clock offset may
-introduce inconsistencies within rounds, however the regular retransmission of
-current state means that the session will converge eventually provided there
-are no permanent network partitions.
-
 \bibliographystyle{plain}
 \bibliography{bibliography}
 
 \appendix
+\section{Experimental results}
+\label{appendix:experimental-results}
+
+% no delays
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_98_644_network_delay_distribution_normal_topology_connected/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_96_212_network_delay_distribution_normal_topology_bridge/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_96_942_network_delay_distribution_normal_topology_line/plot.pdf}
+
+% 48ms delays
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_89_858_network_delay_distribution_constant_network_delay_0_048_topology_connected/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_91_571_network_delay_distribution_constant_network_delay_0_048_topology_bridge/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_90_385_network_delay_distribution_constant_network_delay_0_048_topology_line/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_89_17_network_delay_distribution_normal_network_delay_0_048_topology_connected/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_93_432_network_delay_distribution_normal_network_delay_0_048_topology_bridge/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_95_088_network_delay_distribution_normal_network_delay_0_048_topology_line/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_100_0_network_delay_distribution_pareto_network_delay_0_048_topology_connected/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_97_77_network_delay_distribution_pareto_network_delay_0_048_topology_bridge/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_97_833_network_delay_distribution_pareto_network_delay_0_048_topology_line/plot.pdf}
+
+% 500ms delays
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_91_538_network_delay_distribution_constant_network_delay_0_5_topology_connected/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_82_199_network_delay_distribution_constant_network_delay_0_5_topology_bridge/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_89_134_network_delay_distribution_constant_network_delay_0_5_topology_line/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_90_207_network_delay_distribution_normal_network_delay_0_5_topology_connected/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_84_946_network_delay_distribution_normal_network_delay_0_5_topology_bridge/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_90_48_network_delay_distribution_normal_network_delay_0_5_topology_line/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_97_062_network_delay_distribution_pareto_network_delay_0_5_topology_connected/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_94_346_network_delay_distribution_pareto_network_delay_0_5_topology_bridge/plot.pdf}
+\includepdf[pages=-,angle=-90]{figures-for-publication/tempo_measurements_convergence_96_13_network_delay_distribution_pareto_network_delay_0_5_topology_line/plot.pdf}
+
 \section{Self assessment}
 
 The focus of this work was distilled over time, however the original impetus
@@ -1059,7 +1114,7 @@ would struggle to overcome.
 
 Without more effort on the part of publically funded institutions to target a
 non-academic userbase, the danger is for a tendency toward an implicit elitism
-in their outputs. Software and music is then written for, as received by,
+in their outputs. Software and music is then written for, and received by,
 audiences from within the institutions without regard to how the public life of
 the wider communities can be enriched.
 
@@ -1067,8 +1122,8 @@ With a void of accessible, open source (OSS) alternatives the space is left for
 private companies and individuals to "productize" the work done in academia,
 with high costs for the end user. Music forms a hobby (in many cases a passion)
 among a large percentage of the population - indeed a \textit{dislike} of music
-is so rare that it is deemed a medical condition - textit{musical anhedonia} -
-affecting around 3-5\char`% of the population. Within the rest of the
+is so rare that it is deemed a medical condition - \textit{musical anhedonia} -
+affecting around 3-5\% of the population. Within the rest of the
 population exist a large group who invest a great deal of time and energy into
 music production. Given the dominance of the private market in digital music
 software, this often entails a financial investment too and a dependence on

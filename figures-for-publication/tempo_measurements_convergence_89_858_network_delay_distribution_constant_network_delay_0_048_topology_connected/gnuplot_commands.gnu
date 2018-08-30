@@ -1,8 +1,8 @@
 
   # set terminal pngcairo enhanced font "Helvetica,12.0" size 6400,800;
   # set output "plot.png"
-  set terminal pdf size 29.7cm,21cm enhanced color font 'Helvetica'
-  set output "plot.pdf"
+  set terminal pdf size 180.7cm,21cm enhanced color font 'Helvetica'
+  set output "plot-wide.pdf"
 
   set autoscale x
   set lmargin 15 # accomodate different width ytics

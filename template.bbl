@@ -11,6 +11,13 @@ Hagit Attiya and Jennifer Welch.
   topics}, volume~19.
 \newblock John Wiley \& Sons, 2004.
 
+\bibitem{bermbach2013towards}
+David Bermbach, Liang Zhao, and Sherif Sakr.
+\newblock Towards comprehensive measurement of consistency guarantees for
+  cloud-hosted data storage services.
+\newblock In {\em Technology Conference on Performance Evaluation and
+  Benchmarking}, pages 32--47. Springer, 2013.
+
 \bibitem{bletsas2005evaluation}
 Aggelos Bletsas.
 \newblock Evaluation of kalman filtering for network time keeping.

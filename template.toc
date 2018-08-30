@@ -1,31 +1,34 @@
 \contentsline {section}{\numberline {1}Introduction}{1}
-\contentsline {subsection}{\numberline {1.1}Co-located vs. Geo-distributed}{1}
-\contentsline {subsection}{\numberline {1.2}About Ableton Link}{2}
-\contentsline {subsection}{\numberline {1.3}Evaluating synchronization for music systems}{3}
-\contentsline {subsection}{\numberline {1.4}Fundamental problems of music synchronization}{3}
-\contentsline {section}{\numberline {2}Background research}{3}
-\contentsline {subsection}{\numberline {2.1}Finding bounds - the limits of human perception}{4}
-\contentsline {subsection}{\numberline {2.2}Prior testing approaches}{4}
-\contentsline {section}{\numberline {3}Criteria and design}{5}
-\contentsline {subsection}{\numberline {3.1}Consistency in a musical context}{6}
-\contentsline {subsection}{\numberline {3.2}Synchronization Accuracy versus Bandwidth}{7}
-\contentsline {subsection}{\numberline {3.3}Use of Jepsen, Docker and log parsing}{7}
-\contentsline {subsection}{\numberline {3.4}Topologies and latencies}{8}
-\contentsline {section}{\numberline {4}Experimental results}{9}
-\contentsline {section}{\numberline {5}Analysis}{31}
-\contentsline {subsection}{\numberline {5.1}Musical Consistency}{31}
-\contentsline {subsection}{\numberline {5.2}Effects of delay distributions on clock synchronization}{31}
-\contentsline {subsection}{\numberline {5.3}Symmetric and asymmetric delays}{32}
-\contentsline {subsection}{\numberline {5.4}Bandwidth usage and message complexity}{33}
-\contentsline {subsection}{\numberline {5.5}Resilience during periods of packet loss}{33}
-\contentsline {subsection}{\numberline {5.6}Comments on mutable timelines and temporary divergence}{34}
-\contentsline {section}{\numberline {6}Further work}{37}
-\contentsline {section}{\numberline {7}Conclusions}{37}
-\contentsline {section}{References}{38}
-\contentsline {section}{\numberline {A}Self assessment}{40}
-\contentsline {section}{\numberline {B}Running the tests}{42}
-\contentsline {section}{\numberline {C}Code listings}{42}
-\contentsline {subsection}{\numberline {C.1}\texttt {ruby\char `_ableton\char `_link} gem}{42}
-\contentsline {subsection}{\numberline {C.2}\texttt {jepsen.link}}{43}
-\contentsline {section}{\numberline {D}Professional issues}{43}
-\contentsline {section}{\numberline {E}Acknowledgements}{44}
+\contentsline {section}{\numberline {2}Project goals and methodology}{1}
+\contentsline {subsection}{\numberline {2.1}Evaluating synchronization for music systems}{2}
+\contentsline {subsection}{\numberline {2.2}Fundamental problems of music synchronization}{2}
+\contentsline {section}{\numberline {3}Background research}{2}
+\contentsline {subsection}{\numberline {3.1}About Ableton Link}{3}
+\contentsline {subsection}{\numberline {3.2}Alternative software solutions}{3}
+\contentsline {subsection}{\numberline {3.3}Co-located vs. Geo-distributed}{4}
+\contentsline {subsection}{\numberline {3.4}Finding bounds - the limits of human perception}{5}
+\contentsline {subsection}{\numberline {3.5}Prior testing approaches}{5}
+\contentsline {section}{\numberline {4}Evaluation Criteria and Experiment Design}{6}
+\contentsline {subsection}{\numberline {4.1}Consistency in a musical context}{7}
+\contentsline {subsection}{\numberline {4.2}Synchronization Accuracy versus Bandwidth}{9}
+\contentsline {subsection}{\numberline {4.3}Use of Jepsen, Docker and log parsing}{9}
+\contentsline {subsection}{\numberline {4.4}Topologies and latencies}{10}
+\contentsline {section}{\numberline {5}Analysis}{10}
+\contentsline {subsection}{\numberline {5.1}Note on the visual formatting of results}{10}
+\contentsline {subsection}{\numberline {5.2}Musical Consistency}{11}
+\contentsline {subsection}{\numberline {5.3}Effects of delay distributions on clock synchronization}{12}
+\contentsline {subsection}{\numberline {5.4}Symmetric and asymmetric delays}{12}
+\contentsline {subsection}{\numberline {5.5}Bandwidth usage and message complexity}{15}
+\contentsline {subsection}{\numberline {5.6}Resilience during periods of packet loss}{15}
+\contentsline {subsection}{\numberline {5.7}Comments on mutable timelines and temporary divergence}{16}
+\contentsline {section}{\numberline {6}Further work}{19}
+\contentsline {section}{\numberline {7}Conclusions}{19}
+\contentsline {section}{References}{20}
+\contentsline {section}{\numberline {A}Experimental results}{22}
+\contentsline {section}{\numberline {B}Self assessment}{44}
+\contentsline {section}{\numberline {C}Running the tests}{45}
+\contentsline {section}{\numberline {D}Code listings}{46}
+\contentsline {subsection}{\numberline {D.1}\texttt {ruby\char `_ableton\char `_link} gem}{46}
+\contentsline {subsection}{\numberline {D.2}\texttt {jepsen.link}}{46}
+\contentsline {section}{\numberline {E}Professional issues}{47}
+\contentsline {section}{\numberline {F}Acknowledgements}{48}
